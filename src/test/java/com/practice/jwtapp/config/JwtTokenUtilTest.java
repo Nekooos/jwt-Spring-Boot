@@ -11,12 +11,10 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class JwtTokenUtilTest {
     private JwtTokenUtil jwtTokenUtil;
@@ -56,6 +54,7 @@ public class JwtTokenUtilTest {
 
     @Test
     public void generateToken() {
+        //Set<GrantedAuthority> roles = createRoles();
         Mockito.when(userDetailsService.loadUserByUsername("defaultUser"))
                 .thenReturn(new org.springframework.security.core.userdetails.User("defaultUser", "password", new ArrayList<>()));
         String token = jwtTokenUtil.generateToken(userDetailsService.loadUserByUsername("defaultUser"));

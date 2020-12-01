@@ -14,6 +14,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
+    private static final String ROLE_PREFIX = "ROLE_";
+
     @Autowired
     UserService userService;
 
@@ -27,7 +29,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     private Set<SimpleGrantedAuthority> getAuthority(User user) {
         return user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.getRole()))
+                .map(role -> new SimpleGrantedAuthority(ROLE_PREFIX + role.getRole()))
                 .collect(Collectors.toSet());
     }
 }

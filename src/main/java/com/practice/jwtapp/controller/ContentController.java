@@ -21,6 +21,7 @@ public class ContentController {
     }
 
     @GetMapping("/user")
+    @Secured("ADMIN")
     public String getContentForLoggedInUsers() {
         return "Users and admins can reach this";
     }
