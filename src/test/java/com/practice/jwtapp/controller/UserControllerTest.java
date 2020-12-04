@@ -2,6 +2,7 @@ package com.practice.jwtapp.controller;
 
 import com.practice.jwtapp.model.User;
 import com.practice.jwtapp.model.UserDataTransferObject;
+import com.practice.jwtapp.repository.UserRepository;
 import com.practice.jwtapp.service.UserService;
 import com.practice.jwtapp.testUtil.TestUtil;
 import org.junit.jupiter.api.Assertions;
@@ -13,6 +14,8 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import java.util.Optional;
 
 import static org.mockito.Mockito.times;
 
@@ -40,5 +43,15 @@ public class UserControllerTest {
 
         Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         Mockito.verify(userService, times(1)).saveUser(userDto);
+    }
+
+    @Test
+    public void getById() {
+        Mockito.when(userService.findById(1L)).thenReturn(testUtil.createTestUser());
+
+        ResponseEntity<?> responseEntity = userController.getUserById(1L);
+        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+        Mockito.verify(userService, times(1)).findById(1L);
     }
 }

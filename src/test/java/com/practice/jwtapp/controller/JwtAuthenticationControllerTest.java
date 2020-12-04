@@ -4,7 +4,6 @@ import com.practice.jwtapp.config.JwtTokenUtil;
 import com.practice.jwtapp.model.JwtRequest;
 import com.practice.jwtapp.model.JwtResponse;
 import com.practice.jwtapp.service.JwtUserDetailsService;
-import com.practice.jwtapp.service.UserServiceImpl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -13,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,8 +28,6 @@ public class JwtAuthenticationControllerTest {
     private JwtAuthenticationController jwtAuthenticationController;
 
     private JwtRequest jwtRequest;
-
-    private String token;
 
     @Mock
     AuthenticationManager authenticationManager;
@@ -54,7 +52,8 @@ public class JwtAuthenticationControllerTest {
                 .thenReturn(createUser(jwtRequest));
 
         ResponseEntity<?> responseEntity = jwtAuthenticationController.createAuthenticationToken(jwtRequest);
-        Assertions.assertEquals(ResponseEntity.ok(new JwtResponse(token)).getStatusCode(), responseEntity.getStatusCode());
+
+        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         Mockito.verify(authenticationManager, times(1))
                 .authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
