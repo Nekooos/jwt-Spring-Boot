@@ -53,6 +53,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     }
 
     private void authenticate(UserDetails userDetails, HttpServletRequest request) {
+        System.out.println("User details authorities " + userDetails.getAuthorities() );
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 

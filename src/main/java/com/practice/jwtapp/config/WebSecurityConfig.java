@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/", "/everyone/**", "/h2/**", "/authenticate/**", "/user/save/**").permitAll()
-                //.antMatchers("/content/**").hasAnyRole("USER", "ADMIN")
+                //.antMatchers("/admins").hasRole("ADMIN")
                 //.antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 //.and().sessionManagement()
