@@ -43,8 +43,6 @@ public class JwtAuthenticationController {
 
         } catch (BadCredentialsException e) {
             return ResponseEntity.badRequest().body("Invalid username or password");
-        } catch (UsernameNotFoundException e) {
-            return ResponseEntity.badRequest().body("User does not exist");
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could be anything!", e);
         }
