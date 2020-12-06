@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenUtil implements Serializable {
     @Value("${jwt.expiration}")
-    private long expiration = 5 * 60 * 60 * 1000;
+    private long expiration;
     @Value("${jwt.secret}")
     private String secret;
     @Value("${jwt.authorities}")
@@ -29,10 +29,6 @@ public class JwtTokenUtil implements Serializable {
 
     public Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
-    }
-
-    public Object getCustomClaimFromToken(String token, String key) {
-        return getClaimFromToken(token, claims -> claims.get(key));
     }
 
     public <T> T getClaimFromToken(String token, Function<Claims, T> claims) {

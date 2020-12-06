@@ -54,9 +54,10 @@ public class ContentController {
         return "Pre Authorize for admins aeditorsnd ";
     }
 
-    @GetMapping("/pre-users/{username}")
+    // Should not authorize on path variable, only for test
+    @GetMapping("/pre-users")
     @PreAuthorize("#username == authentication.principal.username")
-    public String preAuthorizeByRoleAndId(@PathVariable String username) {
+    public String preAuthorizeByRoleAndId(String username) {
         return "Pre authorize by username";
     }
 
