@@ -1,6 +1,7 @@
 package com.practice.jwtapp.config;
 
 import com.practice.jwtapp.service.JwtUserDetailsService;
+import com.practice.jwtapp.testUtil.TestUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -20,6 +21,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class JwtTokenUtilTest {
+    private TestUtil testUtil;
     private JwtTokenUtil jwtTokenUtil;
     @Mock
     private JwtUserDetailsService userDetailsService;
@@ -33,6 +35,7 @@ public class JwtTokenUtilTest {
         ReflectionTestUtils.setField(jwtTokenUtil, "authorities", "testAuthorities");
         ReflectionTestUtils.setField(jwtTokenUtil, "expiration", 180000000);
         userDetailsService = new JwtUserDetailsService();
+        testUtil = new TestUtil();
         testToken = createJwtToken();
         MockitoAnnotations.initMocks(this);
     }
@@ -60,7 +63,7 @@ public class JwtTokenUtilTest {
     @Test
     public void generateToken() {
         Mockito.when(userDetailsService.loadUserByUsername("defaultUser"))
-                .thenReturn(new org.springframework.security.core.userdetails.User("defaultUser", "password", getAuthorities()));
+                .thenReturn(new org.springframework.security.core.userdetails.User("defaultUser", "password", testUtil.createAuthorities()));
         String token = jwtTokenUtil.generateToken(userDetailsService.loadUserByUsername("defaultUser"));
         String userName = jwtTokenUtil.getUsernameFromToken(token);
         String roles = (String)jwtTokenUtil.getClaimFromToken(token, claim -> claim.get("testAuthorities"));
@@ -76,20 +79,12 @@ public class JwtTokenUtilTest {
 
     private String createJwtToken() {
         return Jwts.builder()
-                .claim("authorities", getAuthorities())
+                .claim("authorities", testUtil.createAuthorities())
                 .claim("customClaim", "testClaim")
                 .setSubject("defaultUser")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + 5 * 60 * 1000))
                 .signWith(SignatureAlgorithm.HS512, "testSecret")
                 .compact();
-    }
-
-    private Set<SimpleGrantedAuthority> getAuthorities() {
-        Set<SimpleGrantedAuthority> roles = new HashSet<>();
-        roles.add(new SimpleGrantedAuthority("ROLE_USER"));
-        roles.add(new SimpleGrantedAuthority("ROLE_EDITOR"));
-        roles.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
-        return roles;
     }
 }

@@ -43,7 +43,8 @@ public class UserServiceImpl implements UserService {
 
     private Set<Role> addRoleToUser() {
         Set<Role> roles = new HashSet<>();
-        roles.add(roleRepository.findByName("USER"));
+        Role role = roleRepository.findByName("USER");
+        roles.add(role);
         return roles;
     }
 

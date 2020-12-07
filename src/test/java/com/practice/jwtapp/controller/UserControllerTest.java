@@ -36,7 +36,7 @@ public class UserControllerTest {
     @Test
     public void saveUser() {
         UserDataTransferObject userDto = testUtil.createUserDto();
-        User user = testUtil.createTestUser();
+        User user = testUtil.createTestUser("user");
 
         Mockito.when(userService.saveUser(userDto)).thenReturn(user);
         ResponseEntity<?> responseEntity = userController.saveUser(userDto);
@@ -47,7 +47,7 @@ public class UserControllerTest {
 
     @Test
     public void getById() {
-        Mockito.when(userService.findById(1L)).thenReturn(testUtil.createTestUser());
+        Mockito.when(userService.findById(1L)).thenReturn(testUtil.createTestUser("user"));
 
         ResponseEntity<?> responseEntity = userController.getUserById(1L);
         Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
