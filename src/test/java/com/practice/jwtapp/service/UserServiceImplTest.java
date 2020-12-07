@@ -62,8 +62,6 @@ public class UserServiceImplTest {
 
     @Test
     public void saveUser() {
-        User user = testUtil.createTestUser("user");
-
         UserDataTransferObject userDto = testUtil.createUserDto();
 
         Mockito.when(passwordEncoder.encode(Mockito.any(String.class)))
