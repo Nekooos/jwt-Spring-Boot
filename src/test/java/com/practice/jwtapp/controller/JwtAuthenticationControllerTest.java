@@ -4,6 +4,7 @@ import com.practice.jwtapp.config.JwtTokenUtil;
 import com.practice.jwtapp.model.JwtRequest;
 import com.practice.jwtapp.model.JwtResponse;
 import com.practice.jwtapp.service.JwtUserDetailsService;
+import com.practice.jwtapp.testUtil.TestUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -38,9 +39,11 @@ public class JwtAuthenticationControllerTest {
     @Mock
     JwtTokenUtil jwtTokenUtil;
 
+    private TestUtil testUtil;
+
     @BeforeAll
     public void setup() {
-
+        testUtil = new TestUtil();
         jwtAuthenticationController = new JwtAuthenticationController();
         jwtRequest = new JwtRequest("password", "defaultUser");
         MockitoAnnotations.initMocks(this);
@@ -64,6 +67,6 @@ public class JwtAuthenticationControllerTest {
     }
 
     private User createUser(JwtRequest jwtRequest) {
-        return new User(jwtRequest.getUsername(), jwtRequest.getPassword(), Collections.emptySet());
+        return new User(jwtRequest.getUsername(), jwtRequest.getPassword(), testUtil.createAuthorities());
     }
 }

@@ -44,6 +44,7 @@ public class TestUtil {
                 break;
             case "admin" :
                 roles.add(new Role("ROLE_ADMIN"));
+                break;
             }
 
         return roles;
