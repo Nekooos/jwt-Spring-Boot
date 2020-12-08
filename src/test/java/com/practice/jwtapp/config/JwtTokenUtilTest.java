@@ -6,6 +6,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,7 @@ public class JwtTokenUtilTest {
         ReflectionTestUtils.setField(jwtTokenUtil, "secret", "testSecret");
         ReflectionTestUtils.setField(jwtTokenUtil, "authorities", "testAuthorities");
         ReflectionTestUtils.setField(jwtTokenUtil, "expiration", 180000000);
+        ReflectionTestUtils.setField(jwtTokenUtil, "refresh", 180000000);
         userDetailsService = new JwtUserDetailsService();
         testUtil = new TestUtil();
         testToken = createJwtToken();
@@ -65,15 +67,29 @@ public class JwtTokenUtilTest {
         Mockito.when(userDetailsService.loadUserByUsername("defaultUser"))
                 .thenReturn(new org.springframework.security.core.userdetails.User("defaultUser", "password", testUtil.createAuthorities()));
         String token = jwtTokenUtil.generateToken(userDetailsService.loadUserByUsername("defaultUser"));
-        String userName = jwtTokenUtil.getUsernameFromToken(token);
-        String roles = (String)jwtTokenUtil.getClaimFromToken(token, claim -> claim.get("testAuthorities"));
-        Assertions.assertEquals("defaultUser", userName);
+        String username = jwtTokenUtil.getUsernameFromToken(token);
+        String roles = (String)jwtTokenUtil.getCustomClaimFromToken(token, "testAuthorities");
+        Assertions.assertEquals("defaultUser", username);
         Assertions.assertEquals("ROLE_ADMIN,ROLE_EDITOR,ROLE_USER", roles);
     }
 
     @Test
+    public void generateRefreshToken() {
+        DefaultClaims claims = new DefaultClaims();
+        claims.setSubject("defaultUser");
+        claims.put("testAuthorities", "ROLE_USER,ROLE_EDITOR,ROLE_ADMIN");
+
+        String refreshToken = jwtTokenUtil.generateRefreshToken(claims);
+
+        String username = jwtTokenUtil.getUsernameFromToken(refreshToken);
+        String roles = (String)jwtTokenUtil.getCustomClaimFromToken(refreshToken, "testAuthorities");
+        Assertions.assertEquals("defaultUser", username);
+        Assertions.assertEquals("ROLE_USER,ROLE_EDITOR,ROLE_ADMIN", roles);
+    }
+
+    @Test
     public void getCustomClaimFromToken() {
-        String customClaim = (String)jwtTokenUtil.getClaimFromToken(testToken, claims -> claims.get("customClaim"));
+        String customClaim = (String)jwtTokenUtil.getCustomClaimFromToken(testToken, "customClaim");
         Assertions.assertEquals("testClaim", customClaim);
     }
 

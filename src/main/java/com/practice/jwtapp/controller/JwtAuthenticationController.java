@@ -4,6 +4,7 @@ import com.practice.jwtapp.config.JwtTokenUtil;
 import com.practice.jwtapp.model.JwtRequest;
 import com.practice.jwtapp.model.JwtResponse;
 import com.practice.jwtapp.service.JwtUserDetailsService;
+import io.jsonwebtoken.impl.DefaultClaims;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @RestController
 public class JwtAuthenticationController {
@@ -51,6 +55,14 @@ public class JwtAuthenticationController {
 
         final String token = jwtTokenUtil.generateToken(userDetails);
 
+        return ResponseEntity.ok(new JwtResponse(token));
+    }
+
+    @RequestMapping(value = "/refresh-token", method = RequestMethod.GET)
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) throws Exception {
+        DefaultClaims claims = (DefaultClaims) request.getAttribute("claims");
+
+        String token = jwtTokenUtil.generateRefreshToken(claims);
         return ResponseEntity.ok(new JwtResponse(token));
     }
 }

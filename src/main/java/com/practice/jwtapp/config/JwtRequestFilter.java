@@ -17,6 +17,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
@@ -39,14 +40,22 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     authenticate(userDetails, request);
                 }
             }
-        } catch (ExpiredJwtException e) {
-            //refresh if boolean = true
+        } catch (ExpiredJwtException expiredJwtException) {
+            String refreshToken = Optional.of(request.getHeader("refreshToken")).orElse("");
+            String requestURL = request.getRequestURL().toString();
+
+            if (!refreshToken.isEmpty() && refreshToken.equals("true") && requestURL.contains("refresh-token")) {
+                refreshToken(expiredJwtException, request);
+            } else {
+                request.setAttribute("exception", expiredJwtException);
+            }
+
         } catch (SignatureException e) {
-
+            //
         } catch (IllegalArgumentException e) {
-
+            //
         } catch (MalformedJwtException e) {
-
+            //
         }
 
         filterChain.doFilter(request, response);
@@ -58,6 +67,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+    }
+
+    private void refreshToken(ExpiredJwtException expiredJwtException, HttpServletRequest request) {
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+                null, null, null);
+        SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+        request.setAttribute("claims", expiredJwtException.getClaims());
+
     }
 
 }
