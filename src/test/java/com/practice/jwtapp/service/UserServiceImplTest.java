@@ -6,24 +6,20 @@ import com.practice.jwtapp.model.UserDataTransferObject;
 import com.practice.jwtapp.repository.RoleRepository;
 import com.practice.jwtapp.repository.UserRepository;
 import com.practice.jwtapp.testUtil.TestUtil;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class UserServiceImplTest {
     @InjectMocks
@@ -42,15 +38,15 @@ public class UserServiceImplTest {
     public void setup() {
         testUtil = new TestUtil();
         userService = new UserServiceImpl();
-        MockitoAnnotations.initMocks(this);
+        initMocks(this);
     }
 
     @Test
     public void findByUsername() {
-        Mockito.when(userRepository.findByUsername("defaultUser")).thenReturn(Optional.of(testUtil.createTestUser("user")));
+        when(userRepository.findByUsername("defaultUser")).thenReturn(Optional.of(testUtil.createTestUser("user")));
         User user = userService.findByUsername("defaultUser");
         assertEquals(user.getUsername(), "defaultUser");
-        Mockito.verify(userRepository, times(1)).findByUsername("defaultUser");
+        verify(userRepository, times(1)).findByUsername("defaultUser");
     }
 
     @Test
@@ -64,10 +60,10 @@ public class UserServiceImplTest {
     public void saveUser() {
         UserDataTransferObject userDto = testUtil.createUserDto();
 
-        Mockito.when(passwordEncoder.encode(Mockito.any(String.class)))
+        when(passwordEncoder.encode(Mockito.any(String.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
-        Mockito.when(roleRepository.findByName("USER")).thenReturn(new Role("USER"));
-        Mockito.when(userRepository.save(Mockito.any(User.class)))
+        when(roleRepository.findByName("USER")).thenReturn(new Role("USER"));
+        when(userRepository.save(Mockito.any(User.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
 
         User resultUser =  userService.saveUser(userDto);

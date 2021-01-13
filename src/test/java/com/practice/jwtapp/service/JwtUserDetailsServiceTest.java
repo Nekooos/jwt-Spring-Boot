@@ -1,7 +1,6 @@
 package com.practice.jwtapp.service;
 
 import com.practice.jwtapp.testUtil.TestUtil;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -10,6 +9,11 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class JwtUserDetailsServiceTest {
     @Mock
@@ -27,27 +31,27 @@ public class JwtUserDetailsServiceTest {
 
     @Test
     public void loadByUsername() {
-        Mockito.when(userService.findByUsername("defaultUser"))
+        when(userService.findByUsername("defaultUser"))
                 .thenReturn((testUtil.createTestUser("user")));
 
         UserDetails userDetails = jwtUserDetailsService.loadUserByUsername("defaultUser");
 
-        Assertions.assertEquals("defaultUser", userDetails.getUsername());
-        Assertions.assertEquals("password", userDetails.getPassword());
+        assertEquals("defaultUser", userDetails.getUsername());
+        assertEquals("password", userDetails.getPassword());
 
-        Mockito.verify(userService, Mockito.times(1)).findByUsername("defaultUser");
+        verify(userService, Mockito.times(1)).findByUsername("defaultUser");
     }
 
     @Test
     public void loadByUsernameUsernameNotFoundException() {
-        Mockito.when(userService.findByUsername("defaultUser"))
+        when(userService.findByUsername("defaultUser"))
                 .thenReturn((testUtil.createTestUser("user")));
 
-        Mockito.when(jwtUserDetailsService.loadUserByUsername("defaultUser"))
+        when(jwtUserDetailsService.loadUserByUsername("defaultUser"))
                 .thenThrow(new UsernameNotFoundException("Expected exception"));
-        Assertions.assertThrows(UsernameNotFoundException.class, () ->
+        assertThrows(UsernameNotFoundException.class, () ->
             jwtUserDetailsService.loadUserByUsername("defaultUser"));
 
-        Mockito.verify(userService, Mockito.times(1)).findByUsername("defaultUser");
+        verify(userService, Mockito.times(1)).findByUsername("defaultUser");
     }
 }
