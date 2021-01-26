@@ -2,7 +2,9 @@ package com.practice.jwtapp.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,11 +15,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
+
     @Column(name = "username")
     private String username;
+
     @Column(name = "password")
     @JsonIgnore
     private String password;
+
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name = "users_roles",
@@ -26,11 +31,6 @@ public class User {
     private Set<Role> roles = new HashSet<>();
 
     public User() {}
-
-    public User(String username, Set<Role> roles) {
-        this.username = username;
-        this.roles = roles;
-    }
 
     public Long getId() {
         return id;

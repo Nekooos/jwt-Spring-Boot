@@ -1,12 +1,18 @@
 package com.practice.jwtapp.model;
 
-public class UserDataTransferObject {
+import javax.validation.constraints.NotNull;
+
+public class UserDto {
+
+    @NotNull(message = "Username is required")
     private String username;
+
+    @NotNull(message = "Password is required")
     private String password;
 
-    public UserDataTransferObject() {}
+    public UserDto() {}
 
-    public UserDataTransferObject(String username, String password) {
+    public UserDto(String username, String password) {
         this.username = username;
         this.password = password;
     }

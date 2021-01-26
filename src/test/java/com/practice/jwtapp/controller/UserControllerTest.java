@@ -1,16 +1,18 @@
 package com.practice.jwtapp.controller;
 
 import com.practice.jwtapp.model.User;
-import com.practice.jwtapp.model.UserDataTransferObject;
+import com.practice.jwtapp.model.UserDto;
 import com.practice.jwtapp.service.UserService;
 import com.practice.jwtapp.testUtil.TestUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,8 +35,8 @@ public class UserControllerTest {
 
     @Test
     public void saveUser() {
-        UserDataTransferObject userDto = testUtil.createUserDto();
-        User user = testUtil.createTestUser("user");
+        UserDto userDto = testUtil.createUserDto();
+        User user = testUtil.createTestUser(1L, "user", "password", "user");
 
         when(userService.saveUser(userDto)).thenReturn(user);
         ResponseEntity<?> responseEntity = userController.saveUser(userDto);
@@ -45,7 +47,8 @@ public class UserControllerTest {
 
     @Test
     public void getById() {
-        when(userService.findById(1L)).thenReturn(testUtil.createTestUser("user"));
+        when(userService.findById(1L))
+                .thenReturn(testUtil.createTestUser(1L, "user", "password", "user"));
 
         ResponseEntity<?> responseEntity = userController.getUserById(1L);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());

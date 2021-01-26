@@ -31,8 +31,8 @@ public class JwtUserDetailsServiceTest {
 
     @Test
     public void loadByUsername() {
-        when(userService.findByUsername("defaultUser"))
-                .thenReturn((testUtil.createTestUser("user")));
+        Mockito.when(userService.findByUsername("defaultUser"))
+                .thenReturn((testUtil.createTestUser(1L, "user", "password", "user")));
 
         UserDetails userDetails = jwtUserDetailsService.loadUserByUsername("defaultUser");
 
@@ -44,8 +44,8 @@ public class JwtUserDetailsServiceTest {
 
     @Test
     public void loadByUsernameUsernameNotFoundException() {
-        when(userService.findByUsername("defaultUser"))
-                .thenReturn((testUtil.createTestUser("user")));
+        Mockito.when(userService.findByUsername("defaultUser"))
+                .thenReturn((testUtil.createTestUser(1L, "user", "password", "user")));
 
         when(jwtUserDetailsService.loadUserByUsername("defaultUser"))
                 .thenThrow(new UsernameNotFoundException("Expected exception"));

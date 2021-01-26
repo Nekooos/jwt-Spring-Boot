@@ -1,7 +1,7 @@
 package com.practice.jwtapp.controller;
 
 import com.practice.jwtapp.model.User;
-import com.practice.jwtapp.model.UserDataTransferObject;
+import com.practice.jwtapp.model.UserDto;
 import com.practice.jwtapp.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -20,7 +22,7 @@ public class UserController {
     private UserService userService;
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveUser(@RequestBody UserDataTransferObject userDto) {
+    public ResponseEntity<?> saveUser(@Valid @RequestBody UserDto userDto) {
         try {
             User user = userService.saveUser(userDto);
             return ResponseEntity.ok(user);

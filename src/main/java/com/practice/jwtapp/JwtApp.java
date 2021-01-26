@@ -11,7 +11,5 @@ public class JwtApp {
 
 	public static void main(String[] args) {
 		SpringApplication.run(JwtApp.class, args);
-		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
-		System.out.println(bCryptPasswordEncoder.encode("password"));
 	}
 }

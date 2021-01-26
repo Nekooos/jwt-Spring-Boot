@@ -2,7 +2,7 @@ package com.practice.jwtapp.testUtil;
 
 import com.practice.jwtapp.model.Role;
 import com.practice.jwtapp.model.User;
-import com.practice.jwtapp.model.UserDataTransferObject;
+import com.practice.jwtapp.model.UserDto;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.HashSet;
@@ -10,15 +10,17 @@ import java.util.Set;
 
 public class TestUtil {
 
-    public User createTestUser(String role) {
-        User user = new User("defaultUser", createRole(role));
-        user.setPassword("password");
-        user.setId(9L);
+    public User createTestUser(Long id, String username, String password, String role) {
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setId(id);
+        user.setRoles(createRole(role));
         return user;
     }
 
-    public UserDataTransferObject createUserDto() {
-        UserDataTransferObject userDto = new UserDataTransferObject();
+    public UserDto createUserDto() {
+        UserDto userDto = new UserDto();
         userDto.setUsername("defaultUser");
         userDto.setPassword("password");
         return userDto;

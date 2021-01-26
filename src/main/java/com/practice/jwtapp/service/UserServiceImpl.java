@@ -1,21 +1,18 @@
 package com.practice.jwtapp.service;
 
-import com.practice.jwtapp.exception.UserNotFoundException;
+import com.practice.jwtapp.exception.UsernameExistsException;
 import com.practice.jwtapp.model.Role;
 import com.practice.jwtapp.model.User;
-import com.practice.jwtapp.model.UserDataTransferObject;
+import com.practice.jwtapp.model.UserDto;
 import com.practice.jwtapp.repository.RoleRepository;
 import com.practice.jwtapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,12 +30,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(UserDataTransferObject userDto) {
-        User user = new User();
-        user.setUsername(userDto.getUsername());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setRoles(addRoleToUser());
-        return userRepository.save(user);
+    public User saveUser(UserDto userDto) {
+        boolean usernameExists = userRepository.existsByUsername(userDto.getUsername());
+
+        if(!usernameExists) {
+            User user = new User();
+            user.setUsername(userDto.getUsername());
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            user.setRoles(addRoleToUser());
+            return userRepository.save(user);
+        } else {
+            throw new UsernameExistsException("Email is not unique");
+        }
+
     }
 
     private Set<Role> addRoleToUser() {
@@ -51,6 +55,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(() -> new UsernameNotFoundException("User was not found"));
     }
 }

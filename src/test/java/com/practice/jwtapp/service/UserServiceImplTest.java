@@ -2,7 +2,7 @@ package com.practice.jwtapp.service;
 
 import com.practice.jwtapp.model.Role;
 import com.practice.jwtapp.model.User;
-import com.practice.jwtapp.model.UserDataTransferObject;
+import com.practice.jwtapp.model.UserDto;
 import com.practice.jwtapp.repository.RoleRepository;
 import com.practice.jwtapp.repository.UserRepository;
 import com.practice.jwtapp.testUtil.TestUtil;
@@ -11,10 +11,13 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -43,7 +46,8 @@ public class UserServiceImplTest {
 
     @Test
     public void findByUsername() {
-        when(userRepository.findByUsername("defaultUser")).thenReturn(Optional.of(testUtil.createTestUser("user")));
+        when(userService.findById(1L))
+                .thenReturn(testUtil.createTestUser(1L, "user", "password", "user"));
         User user = userService.findByUsername("defaultUser");
         assertEquals(user.getUsername(), "defaultUser");
         verify(userRepository, times(1)).findByUsername("defaultUser");
@@ -58,7 +62,7 @@ public class UserServiceImplTest {
 
     @Test
     public void saveUser() {
-        UserDataTransferObject userDto = testUtil.createUserDto();
+        UserDto userDto = testUtil.createUserDto();
 
         when(passwordEncoder.encode(Mockito.any(String.class)))
                 .thenAnswer(i -> i.getArguments()[0]);

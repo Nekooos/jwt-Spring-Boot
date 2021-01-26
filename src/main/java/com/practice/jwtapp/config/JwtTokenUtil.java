@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class JwtTokenUtil implements Serializable {
     @Value("${jwt.expiration}")
     private long expiration;
-    @Value("${jwt.jwt.refresh}")
+    @Value("${jwt.refresh}")
     private long refresh;
     @Value("${jwt.secret}")
     private String secret;
