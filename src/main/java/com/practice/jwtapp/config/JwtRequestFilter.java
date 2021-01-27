@@ -74,7 +74,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 null, null, null);
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
         request.setAttribute("claims", expiredJwtException.getClaims());
-
     }
 
 }

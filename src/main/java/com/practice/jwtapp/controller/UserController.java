@@ -1,5 +1,6 @@
 package com.practice.jwtapp.controller;
 
+import com.practice.jwtapp.exception.UserNotFoundException;
 import com.practice.jwtapp.model.User;
 import com.practice.jwtapp.model.UserDto;
 import com.practice.jwtapp.service.UserService;
@@ -11,7 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -20,15 +23,17 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+    @PostMapping("/user/resetPassword")
+    public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestParam("username") String username) {
+        userService.resetPassword(username);
+        return ResponseEntity.ok().build();
+    }
 
     @PostMapping("/save")
     public ResponseEntity<?> saveUser(@Valid @RequestBody UserDto userDto) {
-        try {
-            User user = userService.saveUser(userDto);
-            return ResponseEntity.ok(user);
-        } catch(IllegalArgumentException e) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        User user = userService.saveUser(userDto);
+        return ResponseEntity.ok(user);
+
     }
 
     @GetMapping("/{id}")

@@ -9,4 +9,6 @@ public interface UserService {
     User saveUser(UserDto user);
 
     User findById(Long id);
+
+    void resetPassword(String username);
 }

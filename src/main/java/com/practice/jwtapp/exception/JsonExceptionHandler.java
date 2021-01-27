@@ -5,6 +5,7 @@ import com.practice.jwtapp.model.FieldErrorDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -20,7 +21,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @ControllerAdvice
 public class JsonExceptionHandler {
 
-    @ExceptionHandler({MethodArgumentNotValidException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class, UsernameExistsException.class})
     @ResponseBody
     public ResponseEntity<Object> handleForm(MethodArgumentNotValidException methodArgumentNotValidException) {
         BindingResult bindingResult = methodArgumentNotValidException.getBindingResult();
@@ -31,18 +32,10 @@ public class JsonExceptionHandler {
                 .body(new ErrorResponseDto("Form validation failed", fieldErrors));
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
+    @ExceptionHandler({UserNotFoundException.class, UsernameNotFoundException.class})
     @ResponseBody
     public ResponseEntity<Object> UserNotFound(UserNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(new ErrorResponseDto(exception.getMessage()));
-    }
-
-    @ExceptionHandler(UsernameExistsException.class)
-    @ResponseBody
-    public ResponseEntity<Object> UsernameExists(UserNotFoundException exception) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorResponseDto(exception.getMessage()));
     }
