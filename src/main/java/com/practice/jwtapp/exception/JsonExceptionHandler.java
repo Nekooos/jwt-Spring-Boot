@@ -5,6 +5,7 @@ import com.practice.jwtapp.model.FieldErrorDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.MailException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -32,7 +33,23 @@ public class JsonExceptionHandler {
                 .body(new ErrorResponseDto("Form validation failed", fieldErrors));
     }
 
-    @ExceptionHandler({UserNotFoundException.class, UsernameNotFoundException.class})
+    @ExceptionHandler({MailException.class})
+    @ResponseBody
+    public ResponseEntity<Object> UserNotFound(MailException exception) {
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorResponseDto("Could not send email"));
+    }
+
+    @ExceptionHandler({PasswordResetTokenNotValidException.class})
+    @ResponseBody
+    public ResponseEntity<Object> passwordResetTokenNotValid(MailException exception) {
+        return ResponseEntity.status(BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorResponseDto("Url is not valid or expired"));
+    }
+
+    @ExceptionHandler({UserNotFoundException.class, UsernameNotFoundException.class, PasswordResetTokenNotFoundException.class})
     @ResponseBody
     public ResponseEntity<Object> UserNotFound(UserNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)

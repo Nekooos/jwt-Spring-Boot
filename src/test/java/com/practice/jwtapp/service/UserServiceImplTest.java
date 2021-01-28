@@ -11,13 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -49,7 +44,7 @@ public class UserServiceImplTest {
         when(userService.findById(1L))
                 .thenReturn(testUtil.createTestUser(1L, "user", "password", "user"));
         User user = userService.findByUsername("defaultUser");
-        assertEquals(user.getUsername(), "defaultUser");
+        assertEquals(user.getEmail(), "defaultUser");
         verify(userRepository, times(1)).findByUsername("defaultUser");
     }
 
@@ -72,6 +67,6 @@ public class UserServiceImplTest {
 
         User resultUser =  userService.saveUser(userDto);
 
-        assertEquals("defaultUser", resultUser.getUsername());
+        assertEquals("defaultUser", resultUser.getEmail());
     }
 }

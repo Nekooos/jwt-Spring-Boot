@@ -12,7 +12,7 @@ public class TestUtil {
 
     public User createTestUser(Long id, String username, String password, String role) {
         User user = new User();
-        user.setUsername(username);
+        user.setEmail(username);
         user.setPassword(password);
         user.setId(id);
         user.setRoles(createRole(role));

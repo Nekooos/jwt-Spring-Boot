@@ -6,9 +6,11 @@ import com.practice.jwtapp.model.User;
 import java.util.Date;
 
 public interface PasswordResetTokenService {
-    Date expiryDate();
+    boolean validatePasswordResetToken(String token);
 
     boolean isExpired(PasswordResetToken passwordResetToken);
 
     PasswordResetToken createPasswordResetToken(User user);
+
+    PasswordResetToken savePasswordResetToken(PasswordResetToken passwordResetToken);
 }

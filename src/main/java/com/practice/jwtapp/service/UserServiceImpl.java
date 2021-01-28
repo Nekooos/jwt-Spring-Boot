@@ -1,6 +1,5 @@
 package com.practice.jwtapp.service;
 
-import com.practice.jwtapp.exception.UserNotFoundException;
 import com.practice.jwtapp.exception.UsernameExistsException;
 import com.practice.jwtapp.model.PasswordResetToken;
 import com.practice.jwtapp.model.Role;
@@ -10,14 +9,13 @@ import com.practice.jwtapp.repository.PasswordResetTokenRepository;
 import com.practice.jwtapp.repository.RoleRepository;
 import com.practice.jwtapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -31,6 +29,8 @@ public class UserServiceImpl implements UserService {
     PasswordResetTokenRepository passwordResetTokenRepository;
     @Autowired
     PasswordResetTokenService passwordResetTokenService;
+    @Autowired
+    EmailService emailService;
 
     @Override
     public User findByUsername(String username) {
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
         if(!usernameExists) {
             User user = new User();
-            user.setUsername(userDto.getUsername());
+            user.setEmail(userDto.getUsername());
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             user.setRoles(addRoleToUser());
             return userRepository.save(user);
@@ -68,12 +68,22 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void resetPassword(String username) {
+    public User resetPassword(String username) {
         User user = userRepository.findByUsername(username)
             .orElseThrow(() -> new UsernameNotFoundException("User was not found"));
 
         PasswordResetToken passwordResetToken = passwordResetTokenService.createPasswordResetToken(user);
-        passwordResetTokenRepository.save(passwordResetToken);
+        passwordResetTokenService.savePasswordResetToken(passwordResetToken);
 
+        String url = emailService.createResetUrl(passwordResetToken.getToken());
+        SimpleMailMessage email = emailService.createEmail("Change password", url, user);
+        emailService.sendMail(email);
+
+        return user;
+    }
+
+    @Override
+    public User changePassword(String token) {
+        return null;
     }
 }

@@ -3,13 +3,13 @@ package com.practice.jwtapp.model;
 import javax.validation.constraints.NotNull;
 
 public class PasswordResetDto {
-    @NotNull(message = "password is required")
+    @NotNull(message = "Password is required")
     private String password;
 
-    @NotNull(message = "confirm password is required")
+    @NotNull(message = "Confirm password is required")
     private String confirmPassword;
 
-    @NotNull(message = "token is missing")
+    @NotNull(message = "Token is missing from password reset")
     private String token;
 
     public String getPassword() {
