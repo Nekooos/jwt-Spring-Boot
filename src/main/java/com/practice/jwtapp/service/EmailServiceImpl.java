@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.scheduling.annotation.Async;
 
 public class EmailServiceImpl implements EmailService {
 
@@ -24,6 +25,7 @@ public class EmailServiceImpl implements EmailService {
         return "/user/changePassword?token=" + passwordResetToken;
     }
 
+    @Async
     public void sendMail(SimpleMailMessage email) throws MailException {
         mailSender.send(email);
     }
