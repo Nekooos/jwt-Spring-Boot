@@ -1,14 +1,35 @@
 package com.practice.jwtapp.testUtil;
 
+import com.practice.jwtapp.model.PasswordResetToken;
 import com.practice.jwtapp.model.Role;
 import com.practice.jwtapp.model.User;
 import com.practice.jwtapp.model.UserDto;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
 public class TestUtil {
+
+    public PasswordResetToken createPasswordResetToken(long id, Date date, String token, User user) {
+        PasswordResetToken passwordResetToken = new PasswordResetToken();
+        passwordResetToken.setId(id);
+        passwordResetToken.setExpiryDate(date);
+        passwordResetToken.setToken(token);
+        passwordResetToken.setUser(user);
+        return passwordResetToken;
+    }
+
+    public SimpleMailMessage createEmail(String subject, String from, String body, String to) {
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setSubject(subject);
+        email.setText(body);
+        email.setFrom(from);
+        email.setTo(to);
+        return email;
+    }
 
     public User createTestUser(Long id, String email, String password, String role) {
         User user = new User();

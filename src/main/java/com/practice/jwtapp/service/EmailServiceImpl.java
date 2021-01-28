@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class EmailServiceImpl implements EmailService {
 
     @Autowired
-    MailSender mailSender;
+    JavaMailSender javaMailSender;
 
     public SimpleMailMessage createEmail(String subject, String body, User user) {
         SimpleMailMessage email = new SimpleMailMessage();
@@ -29,6 +30,6 @@ public class EmailServiceImpl implements EmailService {
 
     @Async
     public void sendMail(SimpleMailMessage email) throws MailException {
-        mailSender.send(email);
+        javaMailSender.send(email);
     }
 }

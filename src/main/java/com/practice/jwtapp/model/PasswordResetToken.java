@@ -7,9 +7,6 @@ import java.util.Date;
 
 @Entity
 public class PasswordResetToken {
-    @Value("${jwt.password-expiration}")
-    private int passwordTokenExpiration;
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -21,14 +18,6 @@ public class PasswordResetToken {
     private User user;
 
     private Date expiryDate;
-
-    public int getPasswordTokenExpiration() {
-        return passwordTokenExpiration;
-    }
-
-    public void setPasswordTokenExpiration(int passwordTokenExpiration) {
-        this.passwordTokenExpiration = passwordTokenExpiration;
-    }
 
     public Long getId() {
         return id;
