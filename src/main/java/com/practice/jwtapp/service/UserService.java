@@ -5,7 +5,7 @@ import com.practice.jwtapp.model.User;
 import com.practice.jwtapp.model.UserDto;
 
 public interface UserService {
-    User findByUsername(String username);
+    User findByEmail(String username);
 
     User saveUser(UserDto user);
 

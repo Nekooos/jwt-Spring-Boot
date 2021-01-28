@@ -40,18 +40,18 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void findByUsername() {
+    public void findByEmail() {
         when(userService.findById(1L))
                 .thenReturn(testUtil.createTestUser(1L, "user", "password", "user"));
-        User user = userService.findByUsername("defaultUser");
+        User user = userService.findByEmail("defaultUser");
         assertEquals(user.getEmail(), "defaultUser");
-        verify(userRepository, times(1)).findByUsername("defaultUser");
+        verify(userRepository, times(1)).findByEmail("defaultUser");
     }
 
     @Test
-    public void usernameNotFound() {
+    public void emailNotFound() {
         assertThrows(UsernameNotFoundException.class, () -> {
-            userService.findByUsername("defaultUser");
+            userService.findByEmail("defaultUser");
         });
     }
 

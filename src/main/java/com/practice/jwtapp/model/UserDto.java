@@ -4,25 +4,25 @@ import javax.validation.constraints.NotNull;
 
 public class UserDto {
 
-    @NotNull(message = "Username is required")
-    private String username;
+    @NotNull(message = "Email is required")
+    private String email;
 
     @NotNull(message = "Password is required")
     private String password;
 
     public UserDto() {}
 
-    public UserDto(String username, String password) {
-        this.username = username;
+    public UserDto(String email, String password) {
+        this.email = email;
         this.password = password;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

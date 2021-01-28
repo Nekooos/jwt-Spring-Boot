@@ -30,8 +30,8 @@ public class JwtUserDetailsServiceTest {
     }
 
     @Test
-    public void loadByUsername() {
-        Mockito.when(userService.findByUsername("defaultUser"))
+    public void loadByEmail() {
+        Mockito.when(userService.findByEmail("defaultUser"))
                 .thenReturn((testUtil.createTestUser(1L, "user", "password", "user")));
 
         UserDetails userDetails = jwtUserDetailsService.loadUserByUsername("defaultUser");
@@ -39,12 +39,12 @@ public class JwtUserDetailsServiceTest {
         assertEquals("defaultUser", userDetails.getUsername());
         assertEquals("password", userDetails.getPassword());
 
-        verify(userService, Mockito.times(1)).findByUsername("defaultUser");
+        verify(userService, Mockito.times(1)).findByEmail("defaultUser");
     }
 
     @Test
-    public void loadByUsernameUsernameNotFoundException() {
-        Mockito.when(userService.findByUsername("defaultUser"))
+    public void loadByEmailUsernameNotFoundException() {
+        Mockito.when(userService.findByEmail("defaultUser"))
                 .thenReturn((testUtil.createTestUser(1L, "user", "password", "user")));
 
         when(jwtUserDetailsService.loadUserByUsername("defaultUser"))
@@ -52,6 +52,6 @@ public class JwtUserDetailsServiceTest {
         assertThrows(UsernameNotFoundException.class, () ->
             jwtUserDetailsService.loadUserByUsername("defaultUser"));
 
-        verify(userService, Mockito.times(1)).findByUsername("defaultUser");
+        verify(userService, Mockito.times(1)).findByEmail("defaultUser");
     }
 }

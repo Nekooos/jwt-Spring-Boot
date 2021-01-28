@@ -50,14 +50,14 @@ public class ContentController {
     }
 
     @GetMapping("/pre-users")
-    @PreAuthorize("#username == authentication.principal.username")
-    public String preAuthorizeByUsername(@PathVariable String username) {
-        return "Pre authorize by username: " + username;
+    @PreAuthorize("#email == authentication.principal.username")
+    public String preAuthorizeByEmail(@PathVariable String username) {
+        return "Pre authorize by email: " + username;
     }
 
     //TODO
-    @GetMapping("/post-users/{username}")
-    @PostAuthorize("#username == authentication.principal.username")
+    @GetMapping("/post-users/{email}")
+    @PostAuthorize("#email == authentication.principal.username")
     public String postAuthorizeByRoleAndId(@PathVariable String username) {
         return username;
     }

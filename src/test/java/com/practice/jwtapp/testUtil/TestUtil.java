@@ -21,7 +21,7 @@ public class TestUtil {
 
     public UserDto createUserDto() {
         UserDto userDto = new UserDto();
-        userDto.setUsername("defaultUser");
+        userDto.setEmail("defaultUser");
         userDto.setPassword("password");
         return userDto;
     }

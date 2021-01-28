@@ -2,16 +2,13 @@ package com.practice.jwtapp.controller;
 
 import com.practice.jwtapp.config.JwtTokenUtil;
 import com.practice.jwtapp.model.JwtRequest;
-import com.practice.jwtapp.model.JwtResponse;
 import com.practice.jwtapp.service.JwtUserDetailsService;
 import com.practice.jwtapp.testUtil.TestUtil;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +48,7 @@ public class JwtAuthenticationControllerTest {
 
     @Test
     public void createAuthenticationToken() throws Exception {
-        when(userDetailsService.loadUserByUsername(jwtRequest.getUsername()))
+        when(userDetailsService.loadUserByUsername(jwtRequest.getEmail()))
                 .thenReturn(createUser(jwtRequest));
 
         ResponseEntity<?> responseEntity = jwtAuthenticationController.createAuthenticationToken(jwtRequest);
@@ -59,14 +56,14 @@ public class JwtAuthenticationControllerTest {
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
         verify(authenticationManager, times(1))
-                .authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getUsername(), jwtRequest.getPassword()));
+                .authenticate(new UsernamePasswordAuthenticationToken(jwtRequest.getEmail(), jwtRequest.getPassword()));
         verify(userDetailsService, times(1))
-                .loadUserByUsername(jwtRequest.getUsername());
+                .loadUserByUsername(jwtRequest.getEmail());
         verify(jwtTokenUtil,times(1))
                 .generateToken(createUser(jwtRequest));
     }
 
     private User createUser(JwtRequest jwtRequest) {
-        return new User(jwtRequest.getUsername(), jwtRequest.getPassword(), testUtil.createAuthorities());
+        return new User(jwtRequest.getEmail(), jwtRequest.getPassword(), testUtil.createAuthorities());
     }
 }

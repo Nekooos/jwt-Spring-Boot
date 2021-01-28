@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.persistence.*;
 import java.util.Date;
 
+@Entity
 public class PasswordResetToken {
     @Value("${jwt.password-expiration}")
     private int passwordTokenExpiration;

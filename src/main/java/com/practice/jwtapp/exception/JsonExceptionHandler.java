@@ -22,7 +22,7 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @ControllerAdvice
 public class JsonExceptionHandler {
 
-    @ExceptionHandler({MethodArgumentNotValidException.class, UsernameExistsException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class, EmailExistsException.class})
     @ResponseBody
     public ResponseEntity<Object> handleForm(MethodArgumentNotValidException methodArgumentNotValidException) {
         BindingResult bindingResult = methodArgumentNotValidException.getBindingResult();

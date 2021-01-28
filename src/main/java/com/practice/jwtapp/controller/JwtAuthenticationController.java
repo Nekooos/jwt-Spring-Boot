@@ -36,7 +36,7 @@ public class JwtAuthenticationController {
         try {
             final Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
-                            jwtRequest.getUsername(),
+                            jwtRequest.getEmail(),
                             jwtRequest.getPassword()
                     )
             );
@@ -48,7 +48,7 @@ public class JwtAuthenticationController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Could be anything!", e);
         }
 
-        final UserDetails userDetails = userDetailsService.loadUserByUsername(jwtRequest.getUsername());
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(jwtRequest.getEmail());
 
         final String token = jwtTokenUtil.generateToken(userDetails);
 

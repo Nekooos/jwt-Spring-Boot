@@ -1,6 +1,6 @@
 package com.practice.jwtapp.service;
 
-import com.practice.jwtapp.exception.UsernameExistsException;
+import com.practice.jwtapp.exception.EmailExistsException;
 import com.practice.jwtapp.model.PasswordResetToken;
 import com.practice.jwtapp.model.Role;
 import com.practice.jwtapp.model.User;
@@ -33,23 +33,23 @@ public class UserServiceImpl implements UserService {
     EmailService emailService;
 
     @Override
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username)
+    public User findByEmail(String username) {
+        return userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
     }
 
     @Override
     public User saveUser(UserDto userDto) {
-        boolean usernameExists = userRepository.existsByUsername(userDto.getUsername());
+        boolean usernameExists = userRepository.existsByEmail(userDto.getEmail());
 
         if(!usernameExists) {
             User user = new User();
-            user.setEmail(userDto.getUsername());
+            user.setEmail(userDto.getEmail());
             user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             user.setRoles(addRoleToUser());
             return userRepository.save(user);
         } else {
-            throw new UsernameExistsException("Email is not unique");
+            throw new EmailExistsException("Email is not unique");
         }
 
     }
@@ -68,22 +68,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User resetPassword(String username) {
-        User user = userRepository.findByUsername(username)
+    public User resetPassword(String email) {
+        User user = userRepository.findByEmail(email)
             .orElseThrow(() -> new UsernameNotFoundException("User was not found"));
 
         PasswordResetToken passwordResetToken = passwordResetTokenService.createPasswordResetToken(user);
         passwordResetTokenService.savePasswordResetToken(passwordResetToken);
 
         String url = emailService.createResetUrl(passwordResetToken.getToken());
-        SimpleMailMessage email = emailService.createEmail("Change password", url, user);
-        emailService.sendMail(email);
+        SimpleMailMessage simpleMailMessage = emailService.createEmail("Change password", url, user);
+        emailService.sendMail(simpleMailMessage);
 
         return user;
     }
 
     @Override
     public User changePassword(String token) {
+
         return null;
     }
 }

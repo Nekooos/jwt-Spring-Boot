@@ -40,7 +40,7 @@ public class UserControllerSpringTest {
     @DisplayName("POST user/save throws MethodArgumentNotValidException")
     public void saveNotValidUser() throws Exception {
         UserDto user = testUtil.createUserDto();
-        user.setUsername(null);
+        user.setEmail(null);
 
         when(userService.saveUser(user))
                 .thenAnswer(i -> i.getArguments()[0]);
