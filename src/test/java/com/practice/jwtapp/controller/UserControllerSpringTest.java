@@ -51,8 +51,8 @@ public class UserControllerSpringTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(jsonPath("$.message").value("Form validation failed"))
                 .andExpect(jsonPath("$.fieldErrors").isArray())
-                .andExpect(jsonPath("$.fieldErrors[?(@.field == \"username\")]").exists())
-                .andExpect(jsonPath("$.fieldErrors[?(@.errorMessage == \"Username is required\")]").exists())
+                .andExpect(jsonPath("$.fieldErrors[?(@.field == \"email\")]").exists())
+                .andExpect(jsonPath("$.fieldErrors[?(@.errorMessage == \"Email is required\")]").exists())
                 .andExpect(status().is4xxClientError());
     }
 }

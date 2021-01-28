@@ -10,9 +10,9 @@ import java.util.Set;
 
 public class TestUtil {
 
-    public User createTestUser(Long id, String username, String password, String role) {
+    public User createTestUser(Long id, String email, String password, String role) {
         User user = new User();
-        user.setEmail(username);
+        user.setEmail(email);
         user.setPassword(password);
         user.setId(id);
         user.setRoles(createRole(role));

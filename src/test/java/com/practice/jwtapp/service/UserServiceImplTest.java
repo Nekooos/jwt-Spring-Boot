@@ -14,6 +14,8 @@ import org.mockito.Mockito;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
@@ -41,11 +43,11 @@ public class UserServiceImplTest {
 
     @Test
     public void findByEmail() {
-        when(userService.findById(1L))
-                .thenReturn(testUtil.createTestUser(1L, "user", "password", "user"));
-        User user = userService.findByEmail("defaultUser");
-        assertEquals(user.getEmail(), "defaultUser");
-        verify(userRepository, times(1)).findByEmail("defaultUser");
+        when(userRepository.findByEmail("user@email.com"))
+                .thenAnswer(i -> Optional.of(testUtil.createTestUser(1L, "user@email.com", "password", "user")));
+        User user = userService.findByEmail("user@email.com");
+        assertEquals(user.getEmail(), "user@email.com");
+        verify(userRepository, times(1)).findByEmail("user@email.com");
     }
 
     @Test

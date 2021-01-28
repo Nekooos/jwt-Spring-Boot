@@ -36,7 +36,7 @@ public class JwtUserDetailsServiceTest {
 
         UserDetails userDetails = jwtUserDetailsService.loadUserByUsername("defaultUser");
 
-        assertEquals("defaultUser", userDetails.getUsername());
+        assertEquals("user", userDetails.getUsername());
         assertEquals("password", userDetails.getPassword());
 
         verify(userService, Mockito.times(1)).findByEmail("defaultUser");

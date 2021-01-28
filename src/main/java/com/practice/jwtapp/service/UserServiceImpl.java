@@ -1,6 +1,7 @@
 package com.practice.jwtapp.service;
 
 import com.practice.jwtapp.exception.EmailExistsException;
+import com.practice.jwtapp.exception.UserNotFoundException;
 import com.practice.jwtapp.model.PasswordResetToken;
 import com.practice.jwtapp.model.Role;
 import com.practice.jwtapp.model.User;
@@ -33,9 +34,9 @@ public class UserServiceImpl implements UserService {
     EmailService emailService;
 
     @Override
-    public User findByEmail(String username) {
-        return userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(email + " not found"));
     }
 
     @Override
@@ -64,7 +65,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("User was not found"));
+                .orElseThrow(() -> new UserNotFoundException("User was not found"));
     }
 
     @Override
