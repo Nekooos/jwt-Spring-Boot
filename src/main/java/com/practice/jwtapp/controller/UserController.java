@@ -27,7 +27,7 @@ public class UserController {
 
     @PostMapping("/user/resetPassword")
     public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestParam("username") String username) {
-        User user = userService.resetPassword(username);
+        User user = userService.resetPassword(username, "user/change-password");
         return ResponseEntity.ok(user);
     }
 
@@ -40,12 +40,12 @@ public class UserController {
         return ResponseEntity.ok().headers(headers).build();
     }
 
-    @PostMapping("/user/savePassword")
-    public ResponseEntity<?> savePassword(@Valid PasswordDto passwordDto) {
+    @PutMapping("/user/savePassword")
+    public ResponseEntity<?> savePassword(@Valid @RequestBody PasswordDto passwordDto, @RequestParam("email") String email) {
         passwordResetTokenService.validatePasswordResetToken(passwordDto.getToken());
 
-        User user = userService.changePassword(passwordDto.getToken());
-        return ResponseEntity.ok(user);
+        User updatedUser = userService.saveNewPassword(passwordDto, email);
+        return ResponseEntity.ok(updatedUser);
     }
 
     @PostMapping("/save")

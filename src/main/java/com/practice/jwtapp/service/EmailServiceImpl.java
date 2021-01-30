@@ -24,8 +24,8 @@ public class EmailServiceImpl implements EmailService {
         return email;
     }
 
-    public String createResetUrl(String passwordResetToken) {
-        return "/user/changePassword?token=" + passwordResetToken;
+    public String createResetUrl(String passwordResetToken, String url) {
+        return url + passwordResetToken;
     }
 
     @Async

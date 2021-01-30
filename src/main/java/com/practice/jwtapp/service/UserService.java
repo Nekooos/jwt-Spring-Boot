@@ -1,17 +1,17 @@
 package com.practice.jwtapp.service;
 
-import com.practice.jwtapp.model.PasswordResetToken;
+import com.practice.jwtapp.model.PasswordDto;
 import com.practice.jwtapp.model.User;
 import com.practice.jwtapp.model.UserDto;
 
 public interface UserService {
-    User findByEmail(String username);
+    User findByEmail(String email);
 
     User saveUser(UserDto user);
 
     User findById(Long id);
 
-    User resetPassword(String username);
+    User resetPassword(String email, String url);
 
-    User changePassword(String token);
+    User saveNewPassword(PasswordDto passwordDto, String email);
 }
