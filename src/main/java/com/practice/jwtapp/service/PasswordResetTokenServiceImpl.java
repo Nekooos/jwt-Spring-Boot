@@ -1,6 +1,7 @@
 package com.practice.jwtapp.service;
 
 import com.practice.jwtapp.exception.PasswordResetTokenNotFoundException;
+import com.practice.jwtapp.exception.PasswordResetTokenNotValidException;
 import com.practice.jwtapp.model.PasswordResetToken;
 import com.practice.jwtapp.model.User;
 import com.practice.jwtapp.repository.PasswordResetTokenRepository;
@@ -20,11 +21,13 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
     @Autowired
     private PasswordResetTokenRepository passwordResetTokenRepository;
 
-    public boolean validatePasswordResetToken(String token) {
+    public void validatePasswordResetToken(String token) {
         final PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token)
                 .orElseThrow(() -> new PasswordResetTokenNotFoundException("Url is not valid or expired"));
 
-        return isExpired(passwordResetToken);
+        if(isExpired(passwordResetToken.getExpiryDate())) {
+            throw new PasswordResetTokenNotValidException("Url is not valid or expired");
+        }
     }
 
     private Date expiryDate() {
@@ -33,8 +36,8 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
         return calendar.getTime();
     }
 
-    public boolean isExpired(PasswordResetToken passwordResetToken) {
-        return new Date().after(passwordResetToken.getExpiryDate());
+    private boolean isExpired(Date date) {
+        return new Date().after(date);
     }
 
     public PasswordResetToken createPasswordResetToken(User user) {

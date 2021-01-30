@@ -3,12 +3,8 @@ package com.practice.jwtapp.service;
 import com.practice.jwtapp.model.PasswordResetToken;
 import com.practice.jwtapp.model.User;
 
-import java.util.Date;
-
 public interface PasswordResetTokenService {
-    boolean validatePasswordResetToken(String token);
-
-    boolean isExpired(PasswordResetToken passwordResetToken);
+    void validatePasswordResetToken(String token);
 
     PasswordResetToken createPasswordResetToken(User user);
 
