@@ -32,7 +32,7 @@ public class TestUtil {
     }
 
     public User createTestUser(Long id, String email, String password, String role) {
-        User user = new User();
+        User user = new User(false);
         user.setEmail(email);
         user.setPassword(password);
         user.setId(id);

@@ -2,6 +2,8 @@ package com.practice.jwtapp.controller;
 
 import com.practice.jwtapp.model.User;
 import com.practice.jwtapp.model.UserDto;
+import com.practice.jwtapp.service.ConfirmAccountService;
+import com.practice.jwtapp.service.EmailService;
 import com.practice.jwtapp.service.UserService;
 import com.practice.jwtapp.testUtil.TestUtil;
 import org.junit.jupiter.api.Assertions;
@@ -14,6 +16,7 @@ import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -24,6 +27,10 @@ public class UserControllerTest {
     private UserService userService;
     @InjectMocks
     private UserController userController;
+    @Mock
+    private ConfirmAccountService confirmAccountService;
+    @Mock
+    private EmailService emailService;
     private TestUtil testUtil;
 
     @BeforeEach
@@ -38,11 +45,12 @@ public class UserControllerTest {
         UserDto userDto = testUtil.createUserDto();
         User user = testUtil.createTestUser(1L, "user", "password", "user");
 
-        when(userService.saveUser(userDto)).thenReturn(user);
-        ResponseEntity<?> responseEntity = userController.saveUser(userDto);
+        when(userService.saveUser(userDto, "url")).thenReturn(user);
+
+        ResponseEntity<?> responseEntity = userController.saveUser(userDto, "url");
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        verify(userService, times(1)).saveUser(userDto);
+        verify(userService, times(1)).saveUser(userDto, "ur");
     }
 
     @Test

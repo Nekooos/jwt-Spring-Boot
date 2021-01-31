@@ -42,7 +42,7 @@ public class UserControllerSpringTest {
         UserDto user = testUtil.createUserDto();
         user.setEmail(null);
 
-        when(userService.saveUser(user))
+        when(userService.saveUser(user, "url"))
                 .thenAnswer(i -> i.getArguments()[0]);
 
         mockMvc.perform(post("/user/save")

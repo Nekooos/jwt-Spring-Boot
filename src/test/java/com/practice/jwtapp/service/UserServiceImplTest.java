@@ -67,7 +67,7 @@ public class UserServiceImplTest {
         when(userRepository.save(Mockito.any(User.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
 
-        User resultUser =  userService.saveUser(userDto);
+        User resultUser =  userService.saveUser(userDto, "url");
 
         assertEquals("defaultUser", resultUser.getEmail());
     }

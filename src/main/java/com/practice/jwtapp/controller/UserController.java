@@ -49,10 +49,25 @@ public class UserController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveUser(@Valid @RequestBody UserDto userDto) {
-        User user = userService.saveUser(userDto);
+    public ResponseEntity<?> saveUser(@Valid @RequestBody UserDto userDto, @RequestParam("email") String email) {
+        User user = userService.saveUser(userDto, "user/confirm-account");
         return ResponseEntity.ok(user);
 
+    }
+
+    @PostMapping("/user/confirm-account")
+    public ResponseEntity<?> confirmAccount(HttpServletRequest request, @RequestParam("email") String email) {
+        User user = userService.confirmAccount(email, "user/change-password");
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/user/confirm-account-from-email")
+    public ResponseEntity<?> ShowConfirmAccountPageIfValidToken(@RequestParam("token") String token) {
+        passwordResetTokenService.validatePasswordResetToken(token);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Location", "/user/confirm-account");
+        return ResponseEntity.ok().headers(headers).build();
     }
 
     @GetMapping("/{id}")

@@ -3,6 +3,7 @@ package com.practice.jwtapp.model;
 import javax.persistence.*;
 import java.util.Date;
 
+@Entity
 public class ConfirmAccountToken {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -10,7 +11,7 @@ public class ConfirmAccountToken {
     private long id;
 
     @Column(name="confirmation_token")
-    private String confirmationToken;
+    private String token;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdDate;
@@ -27,12 +28,12 @@ public class ConfirmAccountToken {
         this.id = id;
     }
 
-    public String getConfirmationToken() {
-        return confirmationToken;
+    public String getToken() {
+        return token;
     }
 
-    public void setConfirmationToken(String confirmationToken) {
-        this.confirmationToken = confirmationToken;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public Date getCreatedDate() {

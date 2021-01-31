@@ -19,17 +19,17 @@ import java.util.Set;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
     @Autowired
-    RoleRepository roleRepository;
+    private RoleRepository roleRepository;
     @Autowired
-    PasswordResetTokenRepository passwordResetTokenRepository;
+    private PasswordResetTokenService passwordResetTokenService;
     @Autowired
-    PasswordResetTokenService passwordResetTokenService;
+    private EmailService emailService;
     @Autowired
-    EmailService emailService;
+    private ConfirmAccountService confirmAccountService;
 
     @Override
     public User findByEmail(String email) {
@@ -38,20 +38,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User saveUser(UserDto userDto) {
+    public User saveUser(UserDto userDto, String url) {
         boolean usernameExists = userRepository.existsByEmail(userDto.getEmail());
 
         if(!usernameExists) {
             User user = createUserFromUserDto(userDto);
-            return userRepository.save(user);
-        } else {
-            throw new EmailExistsException("Email is not unique");
-        }
+            userRepository.save(user);
 
+            return user;
+        } else {
+            throw new EmailExistsException("Email is already in use");
+        }
     }
 
     private User createUserFromUserDto(UserDto userDto) {
-        User user = new User();
+        User user = new User(false);
         user.setEmail(userDto.getEmail());
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setRoles(addRoleToUser());
@@ -94,5 +95,19 @@ public class UserServiceImpl implements UserService {
             throw new PasswordResetTokenNotValidException("Old password does not match");
         }
         return userRepository.save(user);
+    }
+
+    @Override
+    public User confirmAccount(String email, String url) {
+        User user = findByEmail(email);
+
+        ConfirmAccountToken confirmAccountToken = confirmAccountService.createConfirmAccountToken(user);
+        confirmAccountService.saveConfirmAccountToken(confirmAccountToken);
+
+        String path = emailService.createResetUrl(confirmAccountToken.getToken(), url);
+        SimpleMailMessage simpleMailMessage = emailService.createEmail("Confirm Account", path, user);
+        emailService.sendMail(simpleMailMessage);
+
+        return user;
     }
 }
