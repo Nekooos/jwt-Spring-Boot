@@ -13,8 +13,7 @@ public class ConfirmAccountToken {
     @Column(name="confirmation_token")
     private String token;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdDate;
+    private Date expiryDate;
 
     @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
@@ -36,12 +35,12 @@ public class ConfirmAccountToken {
         this.token = token;
     }
 
-    public Date getCreatedDate() {
-        return createdDate;
+    public Date getExpiryDate() {
+        return expiryDate;
     }
 
-    public void setCreatedDate(Date createdDate) {
-        this.createdDate = createdDate;
+    public void setExpiryDate(Date expiryDate) {
+        this.expiryDate = expiryDate;
     }
 
     public User getUser() {

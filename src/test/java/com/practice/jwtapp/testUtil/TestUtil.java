@@ -1,17 +1,41 @@
 package com.practice.jwtapp.testUtil;
 
-import com.practice.jwtapp.model.PasswordResetToken;
-import com.practice.jwtapp.model.Role;
-import com.practice.jwtapp.model.User;
-import com.practice.jwtapp.model.UserDto;
+import com.practice.jwtapp.model.*;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class TestUtil {
+    public PasswordDto createPasswordDto() {
+        PasswordDto passwordDto = new PasswordDto();
+        passwordDto.setNewPassword("newPassword");
+        passwordDto.setOldPassword("oldPassword");
+        passwordDto.setToken(UUID.randomUUID().toString());
+        return passwordDto;
+    }
+
+    private Date expiryDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, 30);
+        return calendar.getTime();
+    }
+
+    public ConfirmAccountToken createConfirmAccountToken(User user) {
+        ConfirmAccountToken confirmAccountToken = new ConfirmAccountToken();
+        confirmAccountToken.setExpiryDate(expiryDate());
+        confirmAccountToken.setToken(UUID.randomUUID().toString());
+        confirmAccountToken.setUser(user);
+        return confirmAccountToken;
+    }
+
+    public PasswordResetToken createPasswordResetToken(User user) {
+        PasswordResetToken passwordResetToken = new PasswordResetToken();
+        passwordResetToken.setToken(UUID.randomUUID().toString());
+        passwordResetToken.setUser(user);
+        passwordResetToken.setExpiryDate(expiryDate());
+        return passwordResetToken;
+    }
 
     public PasswordResetToken createPasswordResetToken(long id, Date date, String token, User user) {
         PasswordResetToken passwordResetToken = new PasswordResetToken();

@@ -1,10 +1,9 @@
 package com.practice.jwtapp.service;
 
 import com.practice.jwtapp.exception.EmailExistsException;
-import com.practice.jwtapp.exception.PasswordResetTokenNotValidException;
+import com.practice.jwtapp.exception.AccountTokenNotValidException;
 import com.practice.jwtapp.exception.UserNotFoundException;
 import com.practice.jwtapp.model.*;
-import com.practice.jwtapp.repository.PasswordResetTokenRepository;
 import com.practice.jwtapp.repository.RoleRepository;
 import com.practice.jwtapp.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +17,10 @@ import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private static final String USER_NOT_FOUND_MESSAGE = "User was not found";
+    private static final String CONFIRM_ACCOUNT_URL = "user/confirm-account";
+    private static final String CHANGE_PASSWORD_URL = "user/change-password";
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -34,21 +37,71 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException(email + " not found"));
+                .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_MESSAGE));
     }
 
     @Override
-    public User saveUser(UserDto userDto, String url) {
+    public User saveUser(UserDto userDto) {
         boolean usernameExists = userRepository.existsByEmail(userDto.getEmail());
 
         if(!usernameExists) {
             User user = createUserFromUserDto(userDto);
             userRepository.save(user);
-
             return user;
         } else {
             throw new EmailExistsException("Email is already in use");
         }
+    }
+
+    @Override
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE));
+    }
+
+    @Override
+    public User resetPassword(String email) {
+        User user = userRepository.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException(USER_NOT_FOUND_MESSAGE));
+
+        PasswordResetToken passwordResetToken = passwordResetTokenService.createPasswordResetToken(user);
+        passwordResetTokenService.savePasswordResetToken(passwordResetToken);
+
+        String path = emailService.createResetUrl(passwordResetToken.getToken(), CHANGE_PASSWORD_URL);
+        SimpleMailMessage simpleMailMessage = emailService.createEmail("Change password", path, user);
+        emailService.sendMail(simpleMailMessage);
+
+        return user;
+    }
+
+    public User saveNewPassword(PasswordDto passwordDto, String email) {
+        User user = findByEmail(email);
+        if(user.getPassword().equals(passwordDto.getOldPassword())) {
+            user.setPassword(passwordDto.getNewPassword());
+        } else {
+            throw new AccountTokenNotValidException("Old password does not match new");
+        }
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User confirmAccount(User user) {
+        ConfirmAccountToken confirmAccountToken = confirmAccountService.createConfirmAccountToken(user);
+        ConfirmAccountToken savedConfirmAccountToken = confirmAccountService.saveConfirmAccountToken(confirmAccountToken);
+
+        String path = emailService.createResetUrl(savedConfirmAccountToken.getToken(), CONFIRM_ACCOUNT_URL);
+        SimpleMailMessage simpleMailMessage = emailService.createEmail("Confirm Account", path, user);
+        emailService.sendMail(simpleMailMessage);
+
+        return user;
+    }
+
+    @Override
+    public User enableAccount(String token) {
+        ConfirmAccountToken confirmAccountToken = confirmAccountService.findConfirmAccountTokenByToken(token);
+        User user = confirmAccountToken.getUser();
+        user.setEnabled(true);
+        return userRepository.save(user);
     }
 
     private User createUserFromUserDto(UserDto userDto) {
@@ -64,50 +117,5 @@ public class UserServiceImpl implements UserService {
         Role role = roleRepository.findByName("USER");
         roles.add(role);
         return roles;
-    }
-
-    @Override
-    public User findById(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("User was not found"));
-    }
-
-    @Override
-    public User resetPassword(String email, String url) {
-        User user = userRepository.findByEmail(email)
-            .orElseThrow(() -> new UsernameNotFoundException("User was not found"));
-
-        PasswordResetToken passwordResetToken = passwordResetTokenService.createPasswordResetToken(user);
-        passwordResetTokenService.savePasswordResetToken(passwordResetToken);
-
-        String path = emailService.createResetUrl(passwordResetToken.getToken(), url);
-        SimpleMailMessage simpleMailMessage = emailService.createEmail("Change password", path, user);
-        emailService.sendMail(simpleMailMessage);
-
-        return user;
-    }
-
-    public User saveNewPassword(PasswordDto passwordDto, String email) {
-        User user = findByEmail(email);
-        if(user.getPassword().equals(passwordDto.getOldPassword())) {
-            user.setPassword(passwordDto.getNewPassword());
-        } else {
-            throw new PasswordResetTokenNotValidException("Old password does not match");
-        }
-        return userRepository.save(user);
-    }
-
-    @Override
-    public User confirmAccount(String email, String url) {
-        User user = findByEmail(email);
-
-        ConfirmAccountToken confirmAccountToken = confirmAccountService.createConfirmAccountToken(user);
-        confirmAccountService.saveConfirmAccountToken(confirmAccountToken);
-
-        String path = emailService.createResetUrl(confirmAccountToken.getToken(), url);
-        SimpleMailMessage simpleMailMessage = emailService.createEmail("Confirm Account", path, user);
-        emailService.sendMail(simpleMailMessage);
-
-        return user;
     }
 }

@@ -1,9 +1,9 @@
 package com.practice.jwtapp.exception;
 
-public class PasswordResetTokenNotValidException extends RuntimeException {
+public class AccountTokenNotFoundException extends RuntimeException {
     private String message;
 
-    public PasswordResetTokenNotValidException(String message) {
+    public AccountTokenNotFoundException(String message) {
         this.message = message;
     }
 

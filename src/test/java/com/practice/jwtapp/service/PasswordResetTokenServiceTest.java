@@ -1,7 +1,7 @@
 package com.practice.jwtapp.service;
 
-import com.practice.jwtapp.exception.PasswordResetTokenNotFoundException;
-import com.practice.jwtapp.exception.PasswordResetTokenNotValidException;
+import com.practice.jwtapp.exception.AccountTokenNotFoundException;
+import com.practice.jwtapp.exception.AccountTokenNotValidException;
 import com.practice.jwtapp.model.PasswordResetToken;
 import com.practice.jwtapp.model.User;
 import com.practice.jwtapp.repository.PasswordResetTokenRepository;
@@ -72,7 +72,7 @@ public class PasswordResetTokenServiceTest {
         when(passwordResetTokenRepository.findByToken(token))
                 .thenAnswer(i -> Optional.empty());
 
-        assertThrows(PasswordResetTokenNotFoundException.class, () ->
+        assertThrows(AccountTokenNotFoundException.class, () ->
                 passwordResetTokenService.validatePasswordResetToken(token));
     }
 
@@ -87,7 +87,7 @@ public class PasswordResetTokenServiceTest {
         when(passwordResetTokenRepository.findByToken(token))
                 .thenAnswer(i -> Optional.of(passwordResetToken));
 
-        assertThrows(PasswordResetTokenNotValidException.class, () ->
+        assertThrows(AccountTokenNotValidException.class, () ->
                 passwordResetTokenService.validatePasswordResetToken(token));
     }
 

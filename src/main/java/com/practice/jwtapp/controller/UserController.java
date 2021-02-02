@@ -3,6 +3,7 @@ package com.practice.jwtapp.controller;
 import com.practice.jwtapp.model.PasswordDto;
 import com.practice.jwtapp.model.User;
 import com.practice.jwtapp.model.UserDto;
+import com.practice.jwtapp.service.ConfirmAccountService;
 import com.practice.jwtapp.service.PasswordResetTokenService;
 import com.practice.jwtapp.service.UserService;
 import org.slf4j.Logger;
@@ -24,14 +25,16 @@ public class UserController {
     private UserService userService;
     @Autowired
     private PasswordResetTokenService passwordResetTokenService;
+    @Autowired
+    private ConfirmAccountService confirmAccountService;
 
-    @PostMapping("/user/resetPassword")
+    @PostMapping("/user/reset-password")
     public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestParam("username") String username) {
-        User user = userService.resetPassword(username, "user/change-password");
+        User user = userService.resetPassword(username);
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/user/changePassword")
+    @GetMapping("/user/change-password-page")
     public ResponseEntity<?> ShowPasswordPageIfValidToken(@RequestParam("token") String token) {
         passwordResetTokenService.validatePasswordResetToken(token);
 
@@ -40,7 +43,7 @@ public class UserController {
         return ResponseEntity.ok().headers(headers).build();
     }
 
-    @PutMapping("/user/savePassword")
+    @PutMapping("/user/save-new-password")
     public ResponseEntity<?> savePassword(@Valid @RequestBody PasswordDto passwordDto, @RequestParam("email") String email) {
         passwordResetTokenService.validatePasswordResetToken(passwordDto.getToken());
 
@@ -49,25 +52,28 @@ public class UserController {
     }
 
     @PostMapping("/save")
-    public ResponseEntity<?> saveUser(@Valid @RequestBody UserDto userDto, @RequestParam("email") String email) {
-        User user = userService.saveUser(userDto, "user/confirm-account");
-        return ResponseEntity.ok(user);
+    public ResponseEntity<?> saveUser(@Valid @RequestBody UserDto userDto) {
+        User user = userService.saveUser(userDto);
+        User savedUser = userService.confirmAccount(user);
+        return ResponseEntity.ok(savedUser);
 
     }
 
-    @PostMapping("/user/confirm-account")
-    public ResponseEntity<?> confirmAccount(HttpServletRequest request, @RequestParam("email") String email) {
-        User user = userService.confirmAccount(email, "user/change-password");
-        return ResponseEntity.ok(user);
-    }
-
-    @GetMapping("/user/confirm-account-from-email")
-    public ResponseEntity<?> ShowConfirmAccountPageIfValidToken(@RequestParam("token") String token) {
-        passwordResetTokenService.validatePasswordResetToken(token);
+    @GetMapping("/user/confirm-account-redirect")
+    public ResponseEntity<?> redirectIfValidToken(@RequestParam("token") String token) {
+        confirmAccountService.validateConfirmAccountToken(token);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.add("Location", "/user/confirm-account");
+        headers.add("Location", "/user/account-enabled?" + token);
         return ResponseEntity.ok().headers(headers).build();
+    }
+
+    @PostMapping("/user/enable-account")
+    public ResponseEntity<?> enableAccount(HttpServletRequest request, @RequestParam("token") String token) {
+        confirmAccountService.validateConfirmAccountToken(token);
+
+        User user = userService.enableAccount(token);
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/{id}")

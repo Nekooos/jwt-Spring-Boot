@@ -7,13 +7,15 @@ import com.practice.jwtapp.model.UserDto;
 public interface UserService {
     User findByEmail(String email);
 
-    User saveUser(UserDto user, String url);
+    User saveUser(UserDto user);
 
     User findById(Long id);
 
-    User resetPassword(String email, String url);
+    User resetPassword(String email);
 
     User saveNewPassword(PasswordDto passwordDto, String email);
 
-    User confirmAccount(String email, String url);
+    User confirmAccount(User user);
+
+    User enableAccount(String token);
 }

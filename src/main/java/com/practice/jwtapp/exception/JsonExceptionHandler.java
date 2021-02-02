@@ -41,7 +41,7 @@ public class JsonExceptionHandler {
                 .body(new ErrorResponseDto("Could not send email"));
     }
 
-    @ExceptionHandler({PasswordResetTokenNotValidException.class})
+    @ExceptionHandler({AccountTokenNotValidException.class})
     @ResponseBody
     public ResponseEntity<Object> passwordResetTokenNotValid(MailException exception) {
         return ResponseEntity.status(BAD_REQUEST)
@@ -49,7 +49,7 @@ public class JsonExceptionHandler {
                 .body(new ErrorResponseDto("Url is not valid or expired"));
     }
 
-    @ExceptionHandler({UserNotFoundException.class, UsernameNotFoundException.class, PasswordResetTokenNotFoundException.class})
+    @ExceptionHandler({UserNotFoundException.class, UsernameNotFoundException.class, AccountTokenNotFoundException.class})
     @ResponseBody
     public ResponseEntity<Object> UserNotFound(UserNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)

@@ -1,7 +1,7 @@
 package com.practice.jwtapp.service;
 
-import com.practice.jwtapp.exception.PasswordResetTokenNotFoundException;
-import com.practice.jwtapp.exception.PasswordResetTokenNotValidException;
+import com.practice.jwtapp.exception.AccountTokenNotFoundException;
+import com.practice.jwtapp.exception.AccountTokenNotValidException;
 import com.practice.jwtapp.model.PasswordResetToken;
 import com.practice.jwtapp.model.User;
 import com.practice.jwtapp.repository.PasswordResetTokenRepository;
@@ -23,10 +23,10 @@ public class PasswordResetTokenServiceImpl implements PasswordResetTokenService 
 
     public void validatePasswordResetToken(String token) {
         final PasswordResetToken passwordResetToken = passwordResetTokenRepository.findByToken(token)
-                .orElseThrow(() -> new PasswordResetTokenNotFoundException("Url is not valid or expired"));
+                .orElseThrow(() -> new AccountTokenNotFoundException("Url is not valid or expired"));
 
         if(isExpired(passwordResetToken.getExpiryDate())) {
-            throw new PasswordResetTokenNotValidException("Url is not valid or expired");
+            throw new AccountTokenNotValidException("Url is not valid or expired");
         }
     }
 

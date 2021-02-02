@@ -45,12 +45,12 @@ public class UserControllerTest {
         UserDto userDto = testUtil.createUserDto();
         User user = testUtil.createTestUser(1L, "user", "password", "user");
 
-        when(userService.saveUser(userDto, "url")).thenReturn(user);
+        when(userService.saveUser(userDto)).thenReturn(user);
 
-        ResponseEntity<?> responseEntity = userController.saveUser(userDto, "url");
+        ResponseEntity<?> responseEntity = userController.saveUser(userDto);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        verify(userService, times(1)).saveUser(userDto, "ur");
+        verify(userService, times(1)).saveUser(userDto);
     }
 
     @Test
