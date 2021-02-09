@@ -143,7 +143,7 @@ public class UserServiceImplTest {
 
     @Test
     public void saveUser() {
-        UserDto userDto = testUtil.createUserDto();
+        UserDto userDto = testUtil.createUserDto("user@mail.com", "password");
 
         when(passwordEncoder.encode(Mockito.any(String.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
@@ -153,6 +153,6 @@ public class UserServiceImplTest {
 
         User resultUser =  userService.saveUser(userDto);
 
-        assertEquals("defaultUser", resultUser.getEmail());
+        assertEquals("user@mail.com", resultUser.getEmail());
     }
 }

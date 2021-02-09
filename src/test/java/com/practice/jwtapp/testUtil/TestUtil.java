@@ -64,9 +64,9 @@ public class TestUtil {
         return user;
     }
 
-    public UserDto createUserDto() {
+    public UserDto createUserDto(String email, String password) {
         UserDto userDto = new UserDto();
-        userDto.setEmail("defaultUser");
+        userDto.setEmail(email);
         userDto.setPassword("password");
         return userDto;
     }

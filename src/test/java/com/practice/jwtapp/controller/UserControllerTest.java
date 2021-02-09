@@ -2,6 +2,7 @@ package com.practice.jwtapp.controller;
 
 import com.practice.jwtapp.model.User;
 import com.practice.jwtapp.model.UserDto;
+import com.practice.jwtapp.repository.UserRepository;
 import com.practice.jwtapp.service.ConfirmAccountService;
 import com.practice.jwtapp.service.EmailService;
 import com.practice.jwtapp.service.UserService;
@@ -31,6 +32,8 @@ public class UserControllerTest {
     private ConfirmAccountService confirmAccountService;
     @Mock
     private EmailService emailService;
+    @Mock
+    private UserRepository userRepository;
     private TestUtil testUtil;
 
     @BeforeEach
@@ -41,19 +44,27 @@ public class UserControllerTest {
     }
 
     @Test
+    @DisplayName("POST user/save")
     public void saveUser() {
-        UserDto userDto = testUtil.createUserDto();
-        User user = testUtil.createTestUser(1L, "user", "password", "user");
+        UserDto userDto = testUtil.createUserDto("user@mail.com", "password");
+        User user = testUtil.createTestUser(1L, "user@mail.com", "password", "user");
 
-        when(userService.saveUser(userDto)).thenReturn(user);
+        when(userService.saveUser(userDto))
+                .thenReturn(user);
+        when(userService.confirmAccount(any()))
+                .thenReturn(user);
 
         ResponseEntity<?> responseEntity = userController.saveUser(userDto);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(user, responseEntity.getBody());
+
         verify(userService, times(1)).saveUser(userDto);
+        verify(userService, times(1)).confirmAccount(any());
     }
 
     @Test
+    @DisplayName("GET user/1")
     public void getById() {
         when(userService.findById(1L))
                 .thenReturn(testUtil.createTestUser(1L, "user", "password", "user"));
