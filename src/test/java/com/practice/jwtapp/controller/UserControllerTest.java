@@ -7,17 +7,13 @@ import com.practice.jwtapp.service.ConfirmAccountService;
 import com.practice.jwtapp.service.EmailService;
 import com.practice.jwtapp.service.UserService;
 import com.practice.jwtapp.testUtil.TestUtil;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -38,7 +34,6 @@ public class UserControllerTest {
 
     @BeforeEach
     public void setup() {
-        userController = new UserController();
         testUtil = new TestUtil();
         initMocks(this);
     }
