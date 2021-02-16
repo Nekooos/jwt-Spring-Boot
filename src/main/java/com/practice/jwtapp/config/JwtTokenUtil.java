@@ -16,7 +16,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Component
-public class JwtTokenUtil implements Serializable {
+public class JwtTokenUtil {
     @Value("${jwt.expiration}")
     private long expiration;
     @Value("${jwt.refresh}")

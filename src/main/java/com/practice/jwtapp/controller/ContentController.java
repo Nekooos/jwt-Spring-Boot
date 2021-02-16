@@ -32,9 +32,13 @@ public class ContentController {
     }
 
     @GetMapping("/editors")
-    @Secured({"ROLE_EDITOR", "ROLE_ADMIN"})
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_EDITOR')")
     public String getContentForLoggedInEditors() {
-        return "Editors and admins can reach this";
+        Authentication authentication = SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+        System.out.println(authentication.getName() + " " + authentication.getAuthorities());
+        return "Editors and admins can reach this " + authentication.getName() + " " + authentication.getAuthorities();
     }
 
     @GetMapping("/admins")
@@ -55,7 +59,6 @@ public class ContentController {
         return "Pre authorize by email: " + username;
     }
 
-    //TODO
     @GetMapping("/post-users/{email}")
     @PostAuthorize("#email == authentication.principal.username")
     public String postAuthorizeByRoleAndId(@PathVariable String username) {

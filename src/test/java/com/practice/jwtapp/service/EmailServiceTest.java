@@ -45,7 +45,6 @@ public class EmailServiceTest {
         assertEquals("user1@mail.com", Objects.requireNonNull(simpleMailMessage.getTo())[0]);
     }
 
-    //TODO change when method is changed
     @Test
     public void createResetUrl() {
         String token = "91bb384e-24a8-47f3-8d71-b7c9f5b54270";

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -33,9 +34,17 @@ public class JsonExceptionHandler {
                 .body(new ErrorResponseDto("Form validation failed", fieldErrors));
     }
 
+    @ExceptionHandler({BadCredentialsException.class})
+    @ResponseBody
+    public ResponseEntity<Object> badCredentials() {
+        return ResponseEntity.status(BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorResponseDto("Invalid username or password"));
+    }
+
     @ExceptionHandler({MailException.class})
     @ResponseBody
-    public ResponseEntity<Object> UserNotFound(MailException exception) {
+    public ResponseEntity<Object> mailError(MailException exception) {
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorResponseDto("Could not send email"));
