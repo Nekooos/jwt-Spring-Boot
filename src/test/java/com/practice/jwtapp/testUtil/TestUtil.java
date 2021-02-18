@@ -21,9 +21,23 @@ public class TestUtil {
         return calendar.getTime();
     }
 
+    private Date expiredDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, -30);
+        return calendar.getTime();
+    }
+
     public ConfirmAccountToken createConfirmAccountToken(User user) {
         ConfirmAccountToken confirmAccountToken = new ConfirmAccountToken();
         confirmAccountToken.setExpiryDate(expiryDate());
+        confirmAccountToken.setToken(UUID.randomUUID().toString());
+        confirmAccountToken.setUser(user);
+        return confirmAccountToken;
+    }
+
+    public ConfirmAccountToken createExpiredConfirmAccountToken(User user) {
+        ConfirmAccountToken confirmAccountToken = new ConfirmAccountToken();
+        confirmAccountToken.setExpiryDate(expiredDate());
         confirmAccountToken.setToken(UUID.randomUUID().toString());
         confirmAccountToken.setUser(user);
         return confirmAccountToken;
@@ -95,5 +109,12 @@ public class TestUtil {
             }
 
         return roles;
+    }
+
+    public Role createRole() {
+        Role role = new Role();
+        role.setRoleId(1);
+        role.setRole("ADMIN");
+        return role;
     }
 }

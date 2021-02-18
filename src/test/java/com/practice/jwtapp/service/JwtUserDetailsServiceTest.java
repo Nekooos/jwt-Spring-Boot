@@ -49,6 +49,7 @@ public class JwtUserDetailsServiceTest {
 
         when(jwtUserDetailsService.loadUserByUsername("defaultUser"))
                 .thenThrow(new UsernameNotFoundException("Expected exception"));
+
         assertThrows(UsernameNotFoundException.class, () ->
             jwtUserDetailsService.loadUserByUsername("defaultUser"));
 

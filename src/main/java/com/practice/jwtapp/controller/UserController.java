@@ -19,7 +19,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
-    Logger logger = LoggerFactory.getLogger(UserController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @Autowired
     private UserService userService;

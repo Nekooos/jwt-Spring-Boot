@@ -2,6 +2,7 @@ package com.practice.jwtapp.service;
 
 import com.practice.jwtapp.exception.EmailExistsException;
 import com.practice.jwtapp.exception.AccountTokenNotValidException;
+import com.practice.jwtapp.exception.EntityNotFoundException;
 import com.practice.jwtapp.exception.UserNotFoundException;
 import com.practice.jwtapp.model.*;
 import com.practice.jwtapp.repository.RoleRepository;
@@ -114,7 +115,8 @@ public class UserServiceImpl implements UserService {
 
     private Set<Role> addRoleToUser() {
         Set<Role> roles = new HashSet<>();
-        Role role = roleRepository.findByName("USER");
+        Role role = roleRepository.findByName("USER")
+                .orElseThrow(() -> new EntityNotFoundException("Role was not found"));
         roles.add(role);
         return roles;
     }

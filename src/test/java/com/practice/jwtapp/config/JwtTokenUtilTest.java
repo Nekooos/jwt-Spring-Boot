@@ -1,5 +1,6 @@
 package com.practice.jwtapp.config;
 
+import com.practice.jwtapp.service.JwtTokenUtil;
 import com.practice.jwtapp.service.JwtUserDetailsService;
 import com.practice.jwtapp.testUtil.TestUtil;
 import io.jsonwebtoken.Claims;

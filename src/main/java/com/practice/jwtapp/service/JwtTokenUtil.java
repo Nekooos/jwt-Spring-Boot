@@ -1,4 +1,4 @@
-package com.practice.jwtapp.config;
+package com.practice.jwtapp.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -1,5 +1,6 @@
 package com.practice.jwtapp.config;
 
+import com.practice.jwtapp.service.JwtTokenUtil;
 import com.practice.jwtapp.service.JwtUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;

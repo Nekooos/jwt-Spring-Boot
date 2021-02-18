@@ -1,5 +1,6 @@
 package com.practice.jwtapp.service;
 
+import com.practice.jwtapp.exception.EntityNotFoundException;
 import com.practice.jwtapp.model.Role;
 import com.practice.jwtapp.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public Role findByName(String name) {
-        return findByName(name);
+        return roleRepository.findByName(name)
+                .orElseThrow(() -> new EntityNotFoundException("Role was not found"));
     }
 }
+

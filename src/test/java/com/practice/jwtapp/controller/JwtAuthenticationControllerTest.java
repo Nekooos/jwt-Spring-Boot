@@ -1,6 +1,6 @@
 package com.practice.jwtapp.controller;
 
-import com.practice.jwtapp.config.JwtTokenUtil;
+import com.practice.jwtapp.service.JwtTokenUtil;
 import com.practice.jwtapp.model.JwtRequest;
 import com.practice.jwtapp.service.JwtUserDetailsService;
 import com.practice.jwtapp.testUtil.TestUtil;

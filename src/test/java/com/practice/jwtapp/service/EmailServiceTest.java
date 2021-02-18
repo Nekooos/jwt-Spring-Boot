@@ -2,7 +2,6 @@ package com.practice.jwtapp.service;
 
 import com.practice.jwtapp.model.User;
 import com.practice.jwtapp.testUtil.TestUtil;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,11 +11,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
 import java.util.Objects;
-import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class EmailServiceTest {
     @InjectMocks

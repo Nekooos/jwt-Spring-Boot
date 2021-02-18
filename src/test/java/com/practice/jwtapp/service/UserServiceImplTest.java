@@ -147,7 +147,7 @@ public class UserServiceImplTest {
 
         when(passwordEncoder.encode(Mockito.any(String.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
-        when(roleRepository.findByName("USER")).thenReturn(new Role("USER"));
+        when(roleRepository.findByName("USER")).thenReturn(Optional.of(new Role("USER")));
         when(userRepository.save(Mockito.any(User.class)))
                 .thenAnswer(i -> i.getArguments()[0]);
 
