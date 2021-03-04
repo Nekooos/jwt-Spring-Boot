@@ -1,16 +1,16 @@
 package com.practice.jwtapp.model;
 
-import java.io.Serializable;
-
-public class JwtRequest implements Serializable {
+public class JwtRequest {
     private String email;
     private String password;
 
-    public JwtRequest() {}
+    public JwtRequest() {
 
-    public JwtRequest(String username, String password) {
-        this.setEmail(username);
-        this.setPassword(password);
+    }
+
+    public JwtRequest(String email, String password) {
+        this.email = email;
+        this.password = password;
     }
 
     public String getEmail() {

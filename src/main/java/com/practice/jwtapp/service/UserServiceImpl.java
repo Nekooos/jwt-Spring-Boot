@@ -7,6 +7,7 @@ import com.practice.jwtapp.exception.UserNotFoundException;
 import com.practice.jwtapp.model.*;
 import com.practice.jwtapp.repository.RoleRepository;
 import com.practice.jwtapp.repository.UserRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,6 +22,7 @@ public class UserServiceImpl implements UserService {
     private static final String USER_NOT_FOUND_MESSAGE = "User was not found";
     private static final String CONFIRM_ACCOUNT_URL = "user/confirm-account";
     private static final String CHANGE_PASSWORD_URL = "user/change-password";
+    private static final String ROLE_NOT_FOUND_MESSAGE = "Role was not found";
 
     @Autowired
     private UserRepository userRepository;
@@ -58,6 +60,22 @@ public class UserServiceImpl implements UserService {
     public User findById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE));
+    }
+
+    @Override
+    public User addRole(long id, String roleName) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE));
+        Role role = roleRepository.findByName(roleName)
+                .orElseThrow(() -> new EntityNotFoundException(ROLE_NOT_FOUND_MESSAGE));
+        return userRepository.save(addRole(user, role));
+    }
+
+    private User addRole(User user, Role role) {
+        Set<Role> roles = user.getRoles();
+        roles.add(role);
+        user.setRoles(roles);
+        return user;
     }
 
     @Override

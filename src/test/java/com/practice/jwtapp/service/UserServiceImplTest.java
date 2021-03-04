@@ -155,4 +155,20 @@ public class UserServiceImplTest {
 
         assertEquals("user@mail.com", resultUser.getEmail());
     }
+
+    @Test
+    public void addRole() {
+        User user = testUtil.createTestUser(1L, "user@mail.com", "password", "user");
+
+        when(roleRepository.findByName("EDITOR"))
+                .thenReturn(Optional.of(new Role("EDITOR")));
+        when(userRepository.findById(anyLong()))
+                .thenReturn(Optional.of(user));
+        when(userRepository.save(Mockito.any(User.class)))
+                .thenAnswer(i -> i.getArguments()[0]);
+
+        User resultUser = userService.addRole(1L, "EDITOR");
+
+        assertTrue(resultUser.getRoles().stream().anyMatch(role -> role.getRole().equals("EDITOR")));
+    }
 }

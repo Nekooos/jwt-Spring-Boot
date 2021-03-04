@@ -81,4 +81,11 @@ public class UserController {
         User user = userService.findById(id);
         return ResponseEntity.ok(user);
     }
+
+    @PutMapping("/add-role")
+    public ResponseEntity<?> changeUserRole(@RequestParam("id") long id, @RequestParam("role") String role) {
+        User modifiedUser = userService.addRole(id, role);
+        return ResponseEntity.ok(modifiedUser);
+
+    }
 }

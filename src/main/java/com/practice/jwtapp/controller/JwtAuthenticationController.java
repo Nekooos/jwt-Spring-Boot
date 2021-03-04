@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class JwtAuthenticationController {
 
     @Autowired

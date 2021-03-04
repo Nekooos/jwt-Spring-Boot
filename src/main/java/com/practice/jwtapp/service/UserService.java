@@ -11,6 +11,8 @@ public interface UserService {
 
     User findById(Long id);
 
+    User addRole(long id, String role);
+
     User resetPassword(String email);
 
     User saveNewPassword(PasswordDto passwordDto, String email);
