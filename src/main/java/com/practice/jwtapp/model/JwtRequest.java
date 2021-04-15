@@ -1,7 +1,11 @@
 package com.practice.jwtapp.model;
 
+import javax.validation.constraints.NotNull;
+
 public class JwtRequest {
+    @NotNull(message = "Username is required")
     private String email;
+    @NotNull(message = "Password is required")
     private String password;
 
     public JwtRequest() {

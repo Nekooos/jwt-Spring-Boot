@@ -4,6 +4,8 @@ import com.practice.jwtapp.model.PasswordDto;
 import com.practice.jwtapp.model.User;
 import com.practice.jwtapp.model.UserDto;
 
+import java.util.List;
+
 public interface UserService {
     User findByEmail(String email);
 
@@ -20,4 +22,6 @@ public interface UserService {
     User confirmAccount(User user);
 
     User enableAccount(String token);
+
+    List<User> getAll();
 }

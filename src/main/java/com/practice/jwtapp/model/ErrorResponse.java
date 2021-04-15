@@ -2,15 +2,15 @@ package com.practice.jwtapp.model;
 
 import java.util.List;
 
-public class ErrorResponseDto {
+public class ErrorResponse {
     private String message;
-    private List<FieldErrorDto> fieldErrors;
+    private List<FieldError> fieldErrors;
 
-    public ErrorResponseDto(String message) {
+    public ErrorResponse(String message) {
         this.message = message;
     }
 
-    public ErrorResponseDto(String message, List<FieldErrorDto> fieldErrors) {
+    public ErrorResponse(String message, List<FieldError> fieldErrors) {
         this.message = message;
         this.fieldErrors = fieldErrors;
     }
@@ -19,7 +19,7 @@ public class ErrorResponseDto {
         return message;
     }
 
-    public List<FieldErrorDto> getFieldErrors() {
+    public List<FieldError> getFieldErrors() {
         return fieldErrors;
     }
 }

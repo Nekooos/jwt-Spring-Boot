@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -54,9 +55,8 @@ public class UserController {
     @PostMapping("/save")
     public ResponseEntity<?> saveUser(@Valid @RequestBody UserDto userDto) {
         User user = userService.saveUser(userDto);
-        User savedUser = userService.confirmAccount(user);
-        return ResponseEntity.ok(savedUser);
-
+        //User savedUser = userService.confirmAccount(user);
+        return ResponseEntity.ok(user);
     }
 
     @GetMapping("/user/confirm-account-redirect")
@@ -86,6 +86,11 @@ public class UserController {
     public ResponseEntity<?> changeUserRole(@RequestParam("id") long id, @RequestParam("role") String role) {
         User modifiedUser = userService.addRole(id, role);
         return ResponseEntity.ok(modifiedUser);
+    }
 
+    @GetMapping("/get-all")
+    public ResponseEntity<?> getAllUsers() {
+        List<User> users = userService.getAll();
+        return ResponseEntity.ok(users);
     }
 }

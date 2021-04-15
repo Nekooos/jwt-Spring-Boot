@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -68,7 +69,8 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException(USER_NOT_FOUND_MESSAGE));
         Role role = roleRepository.findByName(roleName)
                 .orElseThrow(() -> new EntityNotFoundException(ROLE_NOT_FOUND_MESSAGE));
-        return userRepository.save(addRole(user, role));
+        User modifiedUser = addRole(user, role);
+        return userRepository.save(modifiedUser);
     }
 
     private User addRole(User user, Role role) {
@@ -121,6 +123,11 @@ public class UserServiceImpl implements UserService {
         User user = confirmAccountToken.getUser();
         user.setEnabled(true);
         return userRepository.save(user);
+    }
+
+    @Override
+    public List<User> getAll() {
+        return userRepository.findAll();
     }
 
     private User createUserFromUserDto(UserDto userDto) {

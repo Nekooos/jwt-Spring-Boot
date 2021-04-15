@@ -1,12 +1,12 @@
 package com.practice.jwtapp.model;
 
-public class FieldErrorDto {
+public class FieldError {
     private final String objectName;
     private final String field;
     private final String fieldAnnotation;
     private final String errorMessage;
 
-    public FieldErrorDto(String objectName, String field, String fieldAnnotation, String errorMessage) {
+    public FieldError(String objectName, String field, String fieldAnnotation, String errorMessage) {
         this.objectName = objectName;
         this.field = field;
         this.fieldAnnotation = fieldAnnotation;

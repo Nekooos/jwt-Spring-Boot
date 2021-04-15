@@ -15,9 +15,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = "*", maxAge = 3600)
 public class JwtAuthenticationController {
 
     @Autowired
@@ -30,7 +30,7 @@ public class JwtAuthenticationController {
     private JwtUserDetailsService userDetailsService;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest jwtRequest) {
+    public ResponseEntity<?> createAuthenticationToken(@Valid @RequestBody JwtRequest jwtRequest) {
 
         final Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(

@@ -1,10 +1,12 @@
 package com.practice.jwtapp.model;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 public class UserDto {
 
     @NotNull(message = "Email is required")
+    @Email(message = "Not a valid email address")
     private String email;
 
     @NotNull(message = "Password is required")
