@@ -15,11 +15,11 @@ import java.io.Serializable;
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authenticationException) throws IOException {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, createErrorResponse(response));
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, createErrorResponse());
     }
 
-    private String createErrorResponse(HttpServletResponse response) throws IOException {
-        ErrorResponse errorResponse = new ErrorResponse("Invalid username or password");
+    private String createErrorResponse() throws IOException {
+        ErrorResponse errorResponse = new ErrorResponse("Unauthorized");
         ObjectMapper mapper = new ObjectMapper();
         return mapper.writeValueAsString(errorResponse);
     }
