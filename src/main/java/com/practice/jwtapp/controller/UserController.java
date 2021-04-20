@@ -55,8 +55,8 @@ public class UserController {
     @PostMapping("/save")
     public ResponseEntity<?> saveUser(@Valid @RequestBody UserDto userDto) {
         User user = userService.saveUser(userDto);
-        //User savedUser = userService.confirmAccount(user);
-        return ResponseEntity.ok(user);
+        User savedUser = userService.confirmAccount(user);
+        return ResponseEntity.ok(savedUser);
     }
 
     @GetMapping("/user/confirm-account-redirect")

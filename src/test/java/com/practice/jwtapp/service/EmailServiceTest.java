@@ -46,8 +46,9 @@ public class EmailServiceTest {
     @Test
     public void createResetUrl() {
         String token = "91bb384e-24a8-47f3-8d71-b7c9f5b54270";
-        String path = "user/change-password";
-        String url = emailService.createResetUrl(token, path);
-        assertEquals("/user/changePassword?token=91bb384e-24a8-47f3-8d71-b7c9f5b54270", url);
+        String path = "user/change-password?token=";
+        String frontend = "localhost:4200/";
+        String url = emailService.createResetUrl(token, frontend, path);
+        assertEquals("localhost:4200/user/change-password?token=91bb384e-24a8-47f3-8d71-b7c9f5b54270", url);
     }
 }

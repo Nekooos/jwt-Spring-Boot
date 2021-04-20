@@ -18,14 +18,18 @@ public class EmailServiceImpl implements EmailService {
     public SimpleMailMessage createEmail(String subject, String body, User user) {
         SimpleMailMessage email = new SimpleMailMessage();
         email.setSubject(subject);
-        email.setText(body);
+        email.setText(createEmailBody(body));
         email.setTo(user.getEmail());
-        email.setFrom("replace-later@mail.com");
+        email.setFrom("jwtapp");
         return email;
     }
 
-    public String createResetUrl(String passwordResetToken, String url) {
-        return url + passwordResetToken;
+    private String createEmailBody(String body) {
+        return "<a>".concat(body).concat("</a>");
+    }
+
+    public String createResetUrl(String passwordResetToken, String host, String url) {
+        return host.concat(url).concat(passwordResetToken);
     }
 
     @Async

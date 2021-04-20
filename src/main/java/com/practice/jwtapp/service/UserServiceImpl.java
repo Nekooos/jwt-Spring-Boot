@@ -20,9 +20,10 @@ import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private static final String FRONTEND = "localhost:4200/";
     private static final String USER_NOT_FOUND_MESSAGE = "User was not found";
-    private static final String CONFIRM_ACCOUNT_URL = "user/confirm-account";
-    private static final String CHANGE_PASSWORD_URL = "user/change-password";
+    private static final String CONFIRM_ACCOUNT = "register/confirm-account?token=";
+    private static final String CHANGE_PASSWORD = "user/change-password?token=";
     private static final String ROLE_NOT_FOUND_MESSAGE = "Role was not found";
 
     @Autowired
@@ -88,7 +89,7 @@ public class UserServiceImpl implements UserService {
         PasswordResetToken passwordResetToken = passwordResetTokenService.createPasswordResetToken(user);
         passwordResetTokenService.savePasswordResetToken(passwordResetToken);
 
-        String path = emailService.createResetUrl(passwordResetToken.getToken(), CHANGE_PASSWORD_URL);
+        String path = emailService.createResetUrl(passwordResetToken.getToken(), FRONTEND, CHANGE_PASSWORD);
         SimpleMailMessage simpleMailMessage = emailService.createEmail("Change password", path, user);
         emailService.sendMail(simpleMailMessage);
 
@@ -110,7 +111,7 @@ public class UserServiceImpl implements UserService {
         ConfirmAccountToken confirmAccountToken = confirmAccountService.createConfirmAccountToken(user);
         ConfirmAccountToken savedConfirmAccountToken = confirmAccountService.saveConfirmAccountToken(confirmAccountToken);
 
-        String path = emailService.createResetUrl(savedConfirmAccountToken.getToken(), CONFIRM_ACCOUNT_URL);
+        String path = emailService.createResetUrl(savedConfirmAccountToken.getToken(), FRONTEND, CHANGE_PASSWORD);
         SimpleMailMessage simpleMailMessage = emailService.createEmail("Confirm Account", path, user);
         emailService.sendMail(simpleMailMessage);
 
