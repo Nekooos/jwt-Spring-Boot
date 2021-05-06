@@ -29,13 +29,13 @@ public class UserController {
     @Autowired
     private ConfirmAccountService confirmAccountService;
 
-    @PostMapping("/user/reset-password")
-    public ResponseEntity<?> resetPassword(HttpServletRequest request, @RequestParam("username") String username) {
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody String username) {
         User user = userService.resetPassword(username);
         return ResponseEntity.ok(user);
     }
 
-    @GetMapping("/user/change-password-page")
+    @GetMapping("/change-password-page")
     public ResponseEntity<?> ShowPasswordPageIfValidToken(@RequestParam("token") String token) {
         passwordResetTokenService.validatePasswordResetToken(token);
 
@@ -44,7 +44,7 @@ public class UserController {
         return ResponseEntity.ok().headers(headers).build();
     }
 
-    @PutMapping("/user/save-new-password")
+    @PostMapping("/save-new-password")
     public ResponseEntity<?> savePassword(@Valid @RequestBody PasswordDto passwordDto, @RequestParam("email") String email) {
         passwordResetTokenService.validatePasswordResetToken(passwordDto.getToken());
 
@@ -59,7 +59,7 @@ public class UserController {
         return ResponseEntity.ok(savedUser);
     }
 
-    @GetMapping("/user/confirm-account-redirect")
+    @GetMapping("/confirm-account-redirect")
     public ResponseEntity<?> redirectIfValidToken(@RequestParam("token") String token) {
         confirmAccountService.validateConfirmAccountToken(token);
 
@@ -68,8 +68,8 @@ public class UserController {
         return ResponseEntity.ok().headers(headers).build();
     }
 
-    @PostMapping("/user/enable-account")
-    public ResponseEntity<?> enableAccount(HttpServletRequest request, @RequestParam("token") String token) {
+    @PostMapping("/enable-account")
+    public ResponseEntity<?> enableAccount(@RequestBody String token) {
         confirmAccountService.validateConfirmAccountToken(token);
 
         User user = userService.enableAccount(token);

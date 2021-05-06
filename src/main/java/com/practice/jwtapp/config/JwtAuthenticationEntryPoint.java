@@ -1,6 +1,7 @@
 package com.practice.jwtapp.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.practice.jwtapp.exception.NotAuthorizedException;
 import com.practice.jwtapp.model.ErrorResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -15,7 +16,9 @@ import java.io.Serializable;
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authenticationException) throws IOException {
+        response.setContentType("application/json");
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, createErrorResponse());
+
     }
 
     private String createErrorResponse() throws IOException {

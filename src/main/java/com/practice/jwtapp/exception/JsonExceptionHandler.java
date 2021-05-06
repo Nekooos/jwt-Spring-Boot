@@ -8,6 +8,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -53,6 +54,15 @@ public class JsonExceptionHandler {
                 .body(new ErrorResponse("Invalid username or password"));
     }
 
+    //NotAuthorizedException
+    @ExceptionHandler({AuthenticationException.class})
+    @ResponseBody
+    public ResponseEntity<Object> authenticationException(AuthenticationException authenticationException) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorResponse(authenticationException.getMessage()));
+    }
+
     @ExceptionHandler({MailException.class})
     @ResponseBody
     public ResponseEntity<Object> mailError(MailException exception) {
@@ -69,7 +79,7 @@ public class JsonExceptionHandler {
                 .body(new ErrorResponse("Url is not valid or expired"));
     }
 
-    @ExceptionHandler({UserNotFoundException.class, UsernameNotFoundException.class, AccountTokenNotFoundException.class})
+    @ExceptionHandler({UserNotFoundException.class, AccountTokenNotFoundException.class})
     @ResponseBody
     public ResponseEntity<Object> UserNotFound(UserNotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -84,7 +94,7 @@ public class JsonExceptionHandler {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorResponse(exception.getMessage()));
     }
-/*
+
     @ExceptionHandler(UsernameNotFoundException.class)
     @ResponseBody
     public ResponseEntity<Object> UnauthorizedException(Exception exception) {
@@ -92,7 +102,7 @@ public class JsonExceptionHandler {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorResponse(exception.getMessage()));
     }
-*/
+
     private List<FieldError> processFieldErrors(List<org.springframework.validation.FieldError> fieldErrors) {
         return fieldErrors.stream()
                 .map(fieldError -> new FieldError(fieldError.getObjectName(), fieldError.getField(), fieldError.getCode(), fieldError.getDefaultMessage()))

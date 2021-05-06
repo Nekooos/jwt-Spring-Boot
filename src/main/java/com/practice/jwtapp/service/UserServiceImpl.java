@@ -22,7 +22,7 @@ import java.util.Set;
 public class UserServiceImpl implements UserService {
     private static final String FRONTEND = "localhost:4200/";
     private static final String USER_NOT_FOUND_MESSAGE = "User was not found";
-    private static final String CONFIRM_ACCOUNT = "register/confirm-account?token=";
+    private static final String CONFIRM_ACCOUNT = "register/confirm-account/";
     private static final String CHANGE_PASSWORD = "user/change-password?token=";
     private static final String ROLE_NOT_FOUND_MESSAGE = "Role was not found";
 
@@ -98,11 +98,7 @@ public class UserServiceImpl implements UserService {
 
     public User saveNewPassword(PasswordDto passwordDto, String email) {
         User user = findByEmail(email);
-        if(user.getPassword().equals(passwordDto.getOldPassword())) {
-            user.setPassword(passwordDto.getNewPassword());
-        } else {
-            throw new AccountTokenNotValidException("Old password does not match new");
-        }
+        user.setPassword(passwordDto.getNewPassword());
         return userRepository.save(user);
     }
 
@@ -111,7 +107,7 @@ public class UserServiceImpl implements UserService {
         ConfirmAccountToken confirmAccountToken = confirmAccountService.createConfirmAccountToken(user);
         ConfirmAccountToken savedConfirmAccountToken = confirmAccountService.saveConfirmAccountToken(confirmAccountToken);
 
-        String path = emailService.createResetUrl(savedConfirmAccountToken.getToken(), FRONTEND, CHANGE_PASSWORD);
+        String path = emailService.createResetUrl(savedConfirmAccountToken.getToken(), FRONTEND, CONFIRM_ACCOUNT);
         SimpleMailMessage simpleMailMessage = emailService.createEmail("Confirm Account", path, user);
         emailService.sendMail(simpleMailMessage);
 

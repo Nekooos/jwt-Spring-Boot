@@ -10,7 +10,6 @@ public class TestUtil {
     public PasswordDto createPasswordDto() {
         PasswordDto passwordDto = new PasswordDto();
         passwordDto.setNewPassword("newPassword");
-        passwordDto.setOldPassword("oldPassword");
         passwordDto.setToken(UUID.randomUUID().toString());
         return passwordDto;
     }
