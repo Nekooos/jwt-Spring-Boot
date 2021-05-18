@@ -47,7 +47,7 @@ public class JwtAuthenticationController {
         return ResponseEntity.ok(new JwtResponse(token));
     }
 
-    @RequestMapping(value = "/refresh-token", method = RequestMethod.GET)
+    @GetMapping(value = "/refresh-token")
     public ResponseEntity<?> refreshToken(HttpServletRequest request) throws Exception {
         DefaultClaims claims = (DefaultClaims) request.getAttribute("claims");
 

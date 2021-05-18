@@ -13,7 +13,7 @@ public interface UserService {
 
     User findById(Long id);
 
-    User addRole(long id, String role);
+    User addRole(long id, String roleName);
 
     User resetPassword(String email);
 

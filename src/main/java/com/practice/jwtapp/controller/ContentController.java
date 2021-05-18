@@ -51,10 +51,10 @@ public class ContentController {
         return "Pre Authorize for admins and editors ";
     }
 
-    @GetMapping("/pre-users")
+    @GetMapping("/pre-user/{email}")
     @PreAuthorize("#email == authentication.principal.username")
-    public String preAuthorizeByEmail(@PathVariable String username) {
-        return "Pre authorize by email: " + username;
+    public String preAuthorizeByEmail(@PathVariable("email") String email) {
+        return "Pre authorize by email successful";
     }
 
     @GetMapping("/post-users/{email}")

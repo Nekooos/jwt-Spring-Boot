@@ -11,11 +11,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -82,9 +83,16 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @GetMapping("/email/{email}")
+    public ResponseEntity<?> getUserByEmail(@PathVariable String email) {
+        User user = userService.findByEmail(email);
+        return ResponseEntity.ok(user);
+    }
+
     @PutMapping("/add-role")
-    public ResponseEntity<?> changeUserRole(@RequestParam("id") long id, @RequestParam("role") String role) {
-        User modifiedUser = userService.addRole(id, role);
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<?> changeUserRole(@RequestBody Map<String, String> idAndRole) {
+        User modifiedUser = userService.addRole(Long.parseLong(idAndRole.get("id")), idAndRole.get("role"));
         return ResponseEntity.ok(modifiedUser);
     }
 
