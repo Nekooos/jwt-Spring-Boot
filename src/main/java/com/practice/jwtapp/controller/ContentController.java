@@ -54,6 +54,10 @@ public class ContentController {
     @GetMapping("/pre-user/{email}")
     @PreAuthorize("#email == authentication.principal.username")
     public String preAuthorizeByEmail(@PathVariable("email") String email) {
+        Authentication authentication = SecurityContextHolder
+                .getContext()
+                .getAuthentication();
+        System.out.println(authentication.getName());
         return "Pre authorize by email successful";
     }
 

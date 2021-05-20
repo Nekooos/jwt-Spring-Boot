@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -100,5 +102,15 @@ public class UserController {
     public ResponseEntity<?> getAllUsers() {
         List<User> users = userService.getAll();
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/pre-user/{email}")
+    @PreAuthorize("#email == authentication.principal.username")
+    public ResponseEntity<?> preAuthorizeByEmail(@PathVariable("email") String email) {
+        UserDetails user = (UserDetails)SecurityContextHolder
+                .getContext()
+                .getAuthentication().getPrincipal();
+        System.out.println(user.getUsername());
+        return ResponseEntity.ok(email + "is authenticated to user page");
     }
 }
