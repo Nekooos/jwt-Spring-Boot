@@ -24,4 +24,6 @@ public interface UserService {
     User enableAccount(String token);
 
     List<User> getAll();
+
+    String getUserAuthenticatedInformation(String email);
 }

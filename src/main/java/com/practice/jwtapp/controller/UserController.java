@@ -110,7 +110,7 @@ public class UserController {
         UserDetails user = (UserDetails)SecurityContextHolder
                 .getContext()
                 .getAuthentication().getPrincipal();
-        System.out.println(user.getUsername());
-        return ResponseEntity.ok(email + "is authenticated to user page");
+        String information = this.userService.getUserAuthenticatedInformation(email);
+        return ResponseEntity.ok(information);
     }
 }

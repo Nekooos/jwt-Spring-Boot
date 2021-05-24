@@ -10,6 +10,7 @@ import com.practice.jwtapp.repository.UserRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -127,6 +128,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findAll();
     }
 
+    @Override
+    public String getUserAuthenticatedInformation(String email) {
+        return "User authenticated information from user page with email " + email;
+    }
+
     private User createUserFromUserDto(UserDto userDto) {
         User user = new User(false);
         user.setEmail(userDto.getEmail());
@@ -142,4 +148,6 @@ public class UserServiceImpl implements UserService {
         roles.add(role);
         return roles;
     }
+
+
 }
