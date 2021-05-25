@@ -17,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -110,7 +111,10 @@ public class UserController {
         UserDetails user = (UserDetails)SecurityContextHolder
                 .getContext()
                 .getAuthentication().getPrincipal();
+        Map<String, String> informationMap = new HashMap<>();
+
         String information = this.userService.getUserAuthenticatedInformation(email);
-        return ResponseEntity.ok(information);
+        informationMap.put("information", information);
+        return ResponseEntity.ok(informationMap);
     }
 }
