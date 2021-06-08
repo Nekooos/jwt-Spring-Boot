@@ -8,6 +8,7 @@ public class JwtRequest {
     @NotNull(message = "Password is required")
     private String password;
 
+
     public JwtRequest() {
 
     }

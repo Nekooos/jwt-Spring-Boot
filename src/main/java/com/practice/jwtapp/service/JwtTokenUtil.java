@@ -1,6 +1,7 @@
 package com.practice.jwtapp.service;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.DefaultClaims;
@@ -63,6 +64,16 @@ public class JwtTokenUtil {
                 .compact();
     }
 
+    public String generateRefreshToken(UserDetails userDetails) {
+        return Jwts.builder()
+                .claim(authorities, getAuthorities(userDetails))
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + refresh))
+                .signWith(SignatureAlgorithm.HS512, secret)
+                .compact();
+    }
+
     public String generateRefreshToken(DefaultClaims claims) {
         return Jwts.builder()
                 .claim(authorities, claims.get(authorities))
@@ -72,6 +83,7 @@ public class JwtTokenUtil {
                 .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
     }
+
 
     private String getAuthorities(UserDetails userDetails) {
         return userDetails.getAuthorities().stream()
@@ -84,8 +96,13 @@ public class JwtTokenUtil {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
+    public Boolean validateToken(String token, ExpiredJwtException expiredJwtException) {
+        final String username = getUsernameFromToken(token);
+        return (username.equals(expiredJwtException.getClaims().getSubject()) && !isTokenExpired(token));
+    }
+
     public String getJwtTokenFromRequest(HttpServletRequest request) {
-        String header = Optional.ofNullable(request.getHeader("Authorization")).orElse("");
+        String header = Optional.of(request.getHeader("Authorization")).orElse("");
         return header.contains("Bearer ") ? header.substring(7) : "";
     }
 }

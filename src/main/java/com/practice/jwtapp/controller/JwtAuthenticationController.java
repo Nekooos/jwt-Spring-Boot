@@ -43,12 +43,14 @@ public class JwtAuthenticationController {
         final UserDetails userDetails = userDetailsService.loadUserByUsername(jwtRequest.getEmail());
 
         final String token = jwtTokenUtil.generateToken(userDetails);
+        final String refreshToken = jwtTokenUtil.generateRefreshToken(userDetails);
 
-        return ResponseEntity.ok(new JwtResponse(token));
+
+        return ResponseEntity.ok(new JwtResponse(token, refreshToken));
     }
 
     @GetMapping(value = "/refresh-token")
-    public ResponseEntity<?> refreshToken(HttpServletRequest request) throws Exception {
+    public ResponseEntity<?> refreshToken(HttpServletRequest request) {
         DefaultClaims claims = (DefaultClaims) request.getAttribute("claims");
 
         String token = jwtTokenUtil.generateRefreshToken(claims);

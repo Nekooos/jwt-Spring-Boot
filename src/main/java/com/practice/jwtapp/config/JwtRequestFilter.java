@@ -44,8 +44,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         } catch (ExpiredJwtException expiredJwtException) {
             String refreshToken = Optional.of(request.getHeader("refreshToken")).orElse("");
             String requestURL = request.getRequestURL().toString();
+            System.out.println(requestURL);
 
-            if (!refreshToken.isEmpty() && refreshToken.equals("true") && requestURL.contains("refresh-token")) {
+            //if (!refreshToken.isEmpty() && refreshToken.equals("true") && requestURL.contains("refresh-token")) {
+            if (!refreshToken.isEmpty() && jwtTokenUtil.validateToken(refreshToken, expiredJwtException)) {
                 refreshToken(expiredJwtException, request);
             } else {
                 request.setAttribute("exception", expiredJwtException);

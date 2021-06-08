@@ -2,6 +2,7 @@ package com.practice.jwtapp.exception;
 
 import com.practice.jwtapp.model.ErrorResponse;
 import com.practice.jwtapp.model.FieldError;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -36,6 +37,15 @@ public class JsonExceptionHandler {
         return ResponseEntity.status(CONFLICT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorResponse("Form validation failed", fieldErrors));
+    }
+
+
+    @ExceptionHandler({ExpiredJwtException.class})
+    @ResponseBody
+    public ResponseEntity<Object> expiredJwtException() {
+        return ResponseEntity.status(BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorResponse("Expired"));
     }
 
     @ExceptionHandler({EmailExistsException.class})
